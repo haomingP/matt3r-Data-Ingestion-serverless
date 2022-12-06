@@ -1,0 +1,95 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: serverless
+# app and org for use with dashboard.serverless.com
+app: serverless
+org: matt3r
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.9
+
+# you can overwrite defaults here
+#  stage: dev
+  region: us-west-2
+# you can define service wide environment variables here
+  environment:
+    BASE_URL: https://auth.tesla.com/oauth2/v3
+    AUTH_URL: /authorize
+    TOKEN_URL: /token
+    CALLBACL_URL: https://auth.tesla.com/void/callback
+    CLIENT_ID: 81527cff06843c8634fdc09e8ac0abefb46ac849f38fe1e431c2ef2106796384
+    X_TESLA_USER_AGENT: TeslaApp/4.8.0-1025/3e45238df4/android/11
+    UA: TeslaApp/4.8.0-1025/3e45238df4/android/11
+    CLIENT_IP_ADDRESS: "127.0.0.1"
+    OWNER_API_URL: https://owner-api.teslamotors.com
+    VEHICLES_URL: /api/1/vehicles
+    APPSYNC_ENDPOINT: https://3ybqvhla55ff7ihuasuzk6rbwy.appsync-api.us-west-2.amazonaws.com/graphql
+
+# you can add packaging information here
+#package:
+#  patterns:
+#    - '!exclude-me.py'
+#    - '!exclude-me-dir/**'
+#    - include-me.py
+#    - include-me-dir/**
+
+functions:
+  canserver-parquet-converter:
+    handler: handler.lambda_handler
+    timeout: 180
+    memorySize: 256
+    environment:
+      BACKUP_DIR: tmp_backup
+      LANDING_BUCKET: haoming-convert-to-parquet-test
+      LAND_DIR: haoming-parquet/
+      PREFIX: haoming-test-folder/
+      TZ: UTC
+    role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
+    events:
+      - s3:
+          bucket: haoming-test-bucket
+          event: s3:ObjectCreated:*
+          existing: true
+          forceDeploy: true
+      - s3:
+          bucket: haoming-test-bucket
+          event: s3:ObjectRemoved:*
+          existing: true
+          forceDeploy: true
+    Layers:
+      - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
+
+# you can add CloudFormation resource templates here
+resources:
+ Resources:
+   NewResource:
+     Type: AWS::S3::Bucket
+     Properties:
+       BucketName: haoming-test-bucket
+#  Outputs:
+#     NewOutput:
+#       Description: "Description for the output"
+#       Value: "Some output value"
+
+
+
+plugins:
+  - serverless-s3-remover
+  - serverless-python-requirements
+  - serverless-iam-roles-per-function
