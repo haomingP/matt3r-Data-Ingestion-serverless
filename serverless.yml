@@ -90,6 +90,5 @@ functions:
 
 
 plugins:
-  - serverless-s3-remover
   - serverless-python-requirements
   - serverless-iam-roles-per-function
