@@ -72,16 +72,16 @@ functions:
           event: s3:ObjectRemoved:*
           existing: true
           forceDeploy: true
-    Layers:
+    layers:
       - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
 
 # you can add CloudFormation resource templates here
-resources:
- Resources:
-   NewResource:
-     Type: AWS::S3::Bucket
-     Properties:
-       BucketName: haoming-test-bucket
+#resources:
+# Resources:
+#   NewResource:
+#     Type: AWS::S3::Bucket
+#     Properties:
+#       BucketName: haoming-test-bucket
 #  Outputs:
 #     NewOutput:
 #       Description: "Description for the output"
