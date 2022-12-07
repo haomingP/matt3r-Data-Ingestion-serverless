@@ -119,7 +119,7 @@ def lambda_handler(event, context):
 
     # get file content
     get = get_file['Body']
-    # if object_key.split('.')[-1] == 'log':
+    print(get[:10, :])
     names = ['timestamp', 'filed', 'value']
     df_parquet = pd.read_csv(get, delimiter=",", header=None)
     df_parquet = df_parquet.rename(columns={0: names[0], 1: names[1], 2: names[2]})
