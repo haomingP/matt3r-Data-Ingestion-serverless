@@ -28,18 +28,18 @@ provider:
 #  stage: dev
   region: us-west-2
 # you can define service wide environment variables here
-  environment:
-    BASE_URL: https://auth.tesla.com/oauth2/v3
-    AUTH_URL: /authorize
-    TOKEN_URL: /token
-    CALLBACL_URL: https://auth.tesla.com/void/callback
-    CLIENT_ID: 81527cff06843c8634fdc09e8ac0abefb46ac849f38fe1e431c2ef2106796384
-    X_TESLA_USER_AGENT: TeslaApp/4.8.0-1025/3e45238df4/android/11
-    UA: TeslaApp/4.8.0-1025/3e45238df4/android/11
-    CLIENT_IP_ADDRESS: "127.0.0.1"
-    OWNER_API_URL: https://owner-api.teslamotors.com
-    VEHICLES_URL: /api/1/vehicles
-    APPSYNC_ENDPOINT: https://3ybqvhla55ff7ihuasuzk6rbwy.appsync-api.us-west-2.amazonaws.com/graphql
+#  environment:
+#    BASE_URL: https://auth.tesla.com/oauth2/v3
+#    AUTH_URL: /authorize
+#    TOKEN_URL: /token
+#    CALLBACL_URL: https://auth.tesla.com/void/callback
+#    CLIENT_ID: 81527cff06843c8634fdc09e8ac0abefb46ac849f38fe1e431c2ef2106796384
+#    X_TESLA_USER_AGENT: TeslaApp/4.8.0-1025/3e45238df4/android/11
+#    UA: TeslaApp/4.8.0-1025/3e45238df4/android/11
+#    CLIENT_IP_ADDRESS: "127.0.0.1"
+#    OWNER_API_URL: https://owner-api.teslamotors.com
+#    VEHICLES_URL: /api/1/vehicles
+#    APPSYNC_ENDPOINT: https://3ybqvhla55ff7ihuasuzk6rbwy.appsync-api.us-west-2.amazonaws.com/graphql
 
 # you can add packaging information here
 #package:
@@ -56,20 +56,15 @@ functions:
     memorySize: 256
     environment:
       BACKUP_DIR: tmp_backup
-      LANDING_BUCKET: haoming-convert-to-parquet-test
+      LANDING_BUCKET: matt3r-canserver-us-west-2
       LAND_DIR: haoming-parquet/
       PREFIX: haoming-test-folder/
       TZ: UTC
     role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
     events:
       - s3:
-          bucket: haoming-test-bucket
+          bucket: matt3r-canserver-us-west-2
           event: s3:ObjectCreated:*
-          existing: true
-          forceDeploy: true
-      - s3:
-          bucket: haoming-test-bucket
-          event: s3:ObjectRemoved:*
           existing: true
           forceDeploy: true
     layers:
