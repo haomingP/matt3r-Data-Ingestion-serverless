@@ -13,7 +13,7 @@
 
 service: serverless
 # app and org for use with dashboard.serverless.com
-app: serverless
+app: serverless-v1
 org: matt3r
 
 # You can pin your service to only deploy with a specific Serverless version
@@ -29,25 +29,10 @@ provider:
   region: us-west-2
 # you can define service wide environment variables here
 #  environment:
-#    BASE_URL: https://auth.tesla.com/oauth2/v3
-#    AUTH_URL: /authorize
-#    TOKEN_URL: /token
-#    CALLBACL_URL: https://auth.tesla.com/void/callback
-#    CLIENT_ID: 81527cff06843c8634fdc09e8ac0abefb46ac849f38fe1e431c2ef2106796384
-#    X_TESLA_USER_AGENT: TeslaApp/4.8.0-1025/3e45238df4/android/11
-#    UA: TeslaApp/4.8.0-1025/3e45238df4/android/11
-#    CLIENT_IP_ADDRESS: "127.0.0.1"
-#    OWNER_API_URL: https://owner-api.teslamotors.com
-#    VEHICLES_URL: /api/1/vehicles
-#    APPSYNC_ENDPOINT: https://3ybqvhla55ff7ihuasuzk6rbwy.appsync-api.us-west-2.amazonaws.com/graphql
 
 # you can add packaging information here
 #package:
 #  patterns:
-#    - '!exclude-me.py'
-#    - '!exclude-me-dir/**'
-#    - include-me.py
-#    - include-me-dir/**
 
 functions:
   canserver-parquet-converter:
@@ -55,7 +40,6 @@ functions:
     timeout: 180
     memorySize: 256
     environment:
-      BACKUP_DIR: tmp_backup
       LANDING_BUCKET: matt3r-canserver-us-west-2
       LAND_DIR: haoming-parquet/
       PREFIX: haoming-test-folder/

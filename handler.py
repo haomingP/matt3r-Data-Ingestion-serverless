@@ -12,9 +12,7 @@ print("Loading Function..")
 
 # landing bucket and prefix
 LANDING_BUCKET = os.environ.get('LANDING_BUCKET')
-PREFIX = os.environ.get('PREFIX')
-LAND_DIR = os.environ.get('LAND_DIR')
-BACKUP_DIR = os.environ.get('BACKUP_DIR')
+TZ = os.environ.get('TZ')
 
 # S3 Object
 s3 = boto3.client('s3')
@@ -113,70 +111,63 @@ def lambda_handler(event, context):
     # Get S3 Operation
     s3_opt = event['Records'][0]['eventName']
     print(s3_opt)
-    if s3_opt == 'ObjectRemoved:Delete':
-        # Delete
-        s3.delete_object(Bucket=LANDING_BUCKET, Key=BACKUP_DIR + object_key)
-        print("File {} has been successfully deleted from Bucket {}".format(BACKUP_DIR + object_key, LANDING_BUCKET))
-    else:
-        # Copy this file to landing bucket
-        copy_source = {'Bucket': source_bucket, 'Key': object_key}
-        response = s3.copy_object(Bucket=LANDING_BUCKET, Key=BACKUP_DIR + '/' + object_key, CopySource=copy_source)
-        print("This is the {} from bucket {}".format(object_key, source_bucket))
 
-        # access file
-        get_file = s3_object.get_object(Bucket=source_bucket,
-                                        Key=object_key)
-        print("Successfully got the log files!!!")
+    # access file
+    get_file = s3_object.get_object(Bucket=source_bucket,
+                                    Key=object_key)
+    print("Successfully got the log files!!!")
 
-        # get file content
-        get = get_file['Body']
-        # if object_key.split('.')[-1] == 'log':
-        names = ['timestamp', 'filed', 'value']
-        df_parquet = pd.read_csv(get, delimiter=",", header=None)
-        df_parquet = df_parquet.rename(columns={0: names[0], 1: names[1], 2: names[2]})
-        df_parquet = df_parquet.reset_index()
-        df_parquet = pd.DataFrame(df_parquet)
-        # CANSERVER_v2_CANSERVER1664886251.078
-        df_parquet.iloc[0, 1] = df_parquet.iloc[0, 1][22:]
-        df_parquet[['timestamp']] = df_parquet[['timestamp']].astype(float)
+    # get file content
+    get = get_file['Body']
+    # if object_key.split('.')[-1] == 'log':
+    names = ['timestamp', 'filed', 'value']
+    df_parquet = pd.read_csv(get, delimiter=",", header=None)
+    df_parquet = df_parquet.rename(columns={0: names[0], 1: names[1], 2: names[2]})
+    df_parquet = df_parquet.reset_index()
+    df_parquet = pd.DataFrame(df_parquet)
+    # CANSERVER_v2_CANSERVER1664886251.078
+    df_parquet.iloc[0, 1] = df_parquet.iloc[0, 1][22:]
+    df_parquet[['timestamp']] = df_parquet[['timestamp']].astype(float)
 
-        # Merge files which in same hour
-        split_list, fn_list = get_start_end_time(df_parquet)
+    # Merge files which in same hour
+    split_list, fn_list = get_start_end_time(df_parquet)
 
-        """
-        convert csv to parquet
-        """
-        print("start to write parquet file!!!")
+    """
+    convert csv to parquet
+    """
+    print("start to write parquet file!!!")
 
-        # Get the landing bucket path
-        landing_bucket = s3_resource.Bucket(LANDING_BUCKET)
-        exsit_file_list = ['']
-        for object_summary in landing_bucket.objects.filter(Prefix=LAND_DIR):
-            exsit_file_list.append(object_summary.key)
-        print(exsit_file_list)
+    # Get the landing bucket path
+    str = ''
+    land_dir = str.join(object_key.split('/')[0:-1])
+    landing_bucket = s3_resource.Bucket(LANDING_BUCKET)
+    exsit_file_list = ['']
+    for object_summary in landing_bucket.objects.filter(Prefix=land_dir):
+        exsit_file_list.append(object_summary.key)
+    print(exsit_file_list)
 
-        for i in range(len(split_list)):
-            part_df = df_parquet.iloc[split_list[i][0]:split_list[i][1] + 1, :]
+    for i in range(len(split_list)):
+        part_df = df_parquet.iloc[split_list[i][0]:split_list[i][1] + 1, :]
 
-            # search if have previous data of this hour
-            name = LAND_DIR + fn_list[i] + '-00-00' + '.parquet'
-            if name in exsit_file_list:
-                print(name, " is exist in Landing Bucket, need to be updated")
-                last_file = wr.s3.read_parquet(path='s3://' + LANDING_BUCKET + '/' + name)
-                if last_file.iloc[-1, 1] < part_df.iloc[0, 1]:
-                    part_df = pd.concat([last_file, part_df])
-                else:
-                    part_df = pd.concat([part_df, last_file])
-            landing_path = 's3://' + LANDING_BUCKET + '/' + LAND_DIR + fn_list[i] + '-00-00' + '.parquet'
-            print("landing path is: ", landing_path)
+        # search if have previous data of this hour
+        name = land_dir + fn_list[i] + '-00-00' + '.parquet'
+        if name in exsit_file_list:
+            print(name, " is exist in Landing Bucket, need to be updated")
+            last_file = wr.s3.read_parquet(path='s3://' + LANDING_BUCKET + '/' + name)
+            if last_file.iloc[-1, 1] < part_df.iloc[0, 1]:
+                part_df = pd.concat([last_file, part_df])
+            else:
+                part_df = pd.concat([part_df, last_file])
+        landing_path = 's3://' + LANDING_BUCKET + '/' +  land_dir + fn_list[i] + '-00-00' + '.parquet'
+        print("landing path is: ", landing_path)
 
-            try:
-                wr.s3.to_parquet(
-                    df=part_df,
-                    path=landing_path,
-                    dataset=False
-                )
-                print("Parquet file has been saved into landing bucket!!!")
-            except Exception as e:
-                print(e)
-                print("writing to parquet failed!!!")
+        try:
+            wr.s3.to_parquet(
+                df=part_df,
+                path=landing_path,
+                dataset=False
+            )
+            print("Parquet file has been saved into landing bucket!!!")
+        except Exception as e:
+            print(e)
+            print("writing to parquet failed!!!")
