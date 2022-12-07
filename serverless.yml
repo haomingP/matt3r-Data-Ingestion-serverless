@@ -40,14 +40,12 @@ functions:
     timeout: 180
     memorySize: 256
     environment:
-      LANDING_BUCKET: matt3r-canserver-us-west-2
-      LAND_DIR: haoming-parquet/
-      PREFIX: haoming-test-folder/
+      LANDING_BUCKET: haoming-test-bucket
       TZ: UTC
     role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
     events:
       - s3:
-          bucket: matt3r-canserver-us-west-2
+          bucket: haoming-test-bucket
           event: s3:ObjectCreated:*
           existing: true
           forceDeploy: true
