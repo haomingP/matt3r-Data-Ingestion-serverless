@@ -13,7 +13,7 @@
 
 service: serverless
 # app and org for use with dashboard.serverless.com
-app: serverless-v1
+app: serverless
 org: matt3r
 
 # You can pin your service to only deploy with a specific Serverless version
