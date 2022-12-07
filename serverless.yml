@@ -88,7 +88,13 @@ functions:
 #       Value: "Some output value"
 
 
-
 plugins:
+  - serverless-s3-remover
   - serverless-python-requirements
   - serverless-iam-roles-per-function
+
+custom:
+  remover:
+    prompt: true
+    buckets:
+      - haoming-test-bucket
