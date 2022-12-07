@@ -40,7 +40,7 @@ functions:
     timeout: 180
     memorySize: 256
     environment:
-      LANDING_BUCKET: haoming-test-bucket
+      LANDING_BUCKET: haoming-convert-to-parquet-test
       TZ: UTC
     role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
     events:
