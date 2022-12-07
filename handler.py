@@ -158,7 +158,7 @@ def lambda_handler(event, context):
                 part_df = pd.concat([last_file, part_df])
             else:
                 part_df = pd.concat([part_df, last_file])
-        landing_path = 's3://' + LANDING_BUCKET + '/' +  land_dir + fn_list[i] + '-00-00' + '.parquet'
+        landing_path = 's3://' + LANDING_BUCKET + '/' +  land_dir + '/' + fn_list[i] + '-00-00' + '.parquet'
         print("landing path is: ", landing_path)
 
         try:
