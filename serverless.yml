@@ -43,11 +43,7 @@ functions:
       TZ: UTC
     role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
     events:
-      - s3:
-          bucket: matt3r-canserver-raw-us-west-2
-          event: s3:ObjectCreated:*
-          existing: true
-          forceDeploy: true
+      - sqs: arn:aws:sqs:us-west-2:963414178352:parse_canserver
     layers:
       - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
 
@@ -65,10 +61,20 @@ functions:
     layers:
       - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
 
+  infer-stationary-states:
+    handler: infer-stationary-states.lambda_handler
+    timeout: 180
+    memorySize: 256
+    environment:
+      RAW_BUCKET: matt3r-canserver-us-west-2
+      LANDING_BUCKET: matt3r-canserver-event-us-west-2
+      TZ: UTC
+    role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
+    events:
+      - sqs: arn:aws:sqs:us-west-2:963414178352:infer_DMD_stationary
+    layers:
+      - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
+
 # you can add CloudFormation resource templates here
 #resources:
 #  Resources:
-#    Topic:
-#      Type: AWS::SNS::Topic
-#      Properties:
-#        TopicName: haoming-dpl-sns
