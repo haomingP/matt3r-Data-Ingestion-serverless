@@ -1,2 +1,3 @@
-# matt3r-aws-infra
-Repository to hold all AWS &amp; Serverless Infrastructure code 
+# Matt3r Data Pipeline Repository
+
+The repository to hold the data pipeline infrastructure codes, and AWS serverless deployment configurations. 
