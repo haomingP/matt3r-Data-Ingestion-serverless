@@ -90,7 +90,7 @@ resources:
         Subscription:
           - Endpoint:
               Fn::GetAtt:
-                - "parse_canserver"
+                - "MyFirstQueue"
                 - "Arn"
             Protocol: "sqs"
     MyFirstQueue:
