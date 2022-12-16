@@ -48,7 +48,7 @@ functions:
       TZ: UTC
     role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
     events:
-      - sqs: arn:aws:sqs:us-west-2:963414178352:
+      - sqs: arn:aws:sqs:us-west-2:963414178352:ParseCanserver
     layers:
       - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
 
@@ -62,7 +62,7 @@ functions:
       TZ: UTC
     role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
     events:
-      - sqs: arn:aws:sqs:us-west-2:963414178352:ParseCanserver
+      - sqs: arn:aws:sqs:us-west-2:963414178352:InferAutopilotStates
     layers:
       - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
 
