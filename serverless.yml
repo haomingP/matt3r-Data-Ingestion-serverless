@@ -66,20 +66,20 @@ functions:
       - sqs: arn:aws:sqs:us-west-2:963414178352:InferAutopilotStates
     layers:
       - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
-
-  infer-stationary-states:
-    handler: infer-stationary-states.lambda_handler
-    timeout: 180
-    memorySize: 256
-    environment:
-      RAW_BUCKET: matt3r-canserver-us-west-2
-      LANDING_BUCKET: matt3r-canserver-event-us-west-2
-      TZ: UTC
-    role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
-    events:
-      - sqs: arn:aws:sqs:us-west-2:963414178352:InferStationaryStates
-    layers:
-      - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
+#
+#  infer-stationary-states:
+#    handler: infer-stationary-states.lambda_handler
+#    timeout: 180
+#    memorySize: 256
+#    environment:
+#      RAW_BUCKET: matt3r-canserver-us-west-2
+#      LANDING_BUCKET: matt3r-canserver-event-us-west-2
+#      TZ: UTC
+#    role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
+#    events:
+#      - sqs: arn:aws:sqs:us-west-2:963414178352:InferStationaryStates
+#    layers:
+#      - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
 
 # you can add CloudFormation resource templates here
 resources:
@@ -99,11 +99,11 @@ resources:
                 - "InferAutopilotStates"
                 - "Arn"
             Protocol: "sqs"
-          - Endpoint:
-              Fn::GetAtt:
-                - "InferStationaryStates"
-                - "Arn"
-            Protocol: "sqs"
+#          - Endpoint:
+#              Fn::GetAtt:
+#                - "InferStationaryStates"
+#                - "Arn"
+#            Protocol: "sqs"
 
     ParseCanserver:
       Type: AWS::SQS::Queue
@@ -122,15 +122,15 @@ resources:
         MessageRetentionPeriod: 60
         QueueName: infer-autopilot-states
         VisibilityTimeout: 360
-
-    InferStationaryStates:
-      Type: AWS::SQS::Queue
-      Properties:
-        DelaySeconds: 0
-        MaximumMessageSize: 1024
-        MessageRetentionPeriod: 60
-        QueueName: infer-stationary-states
-        VisibilityTimeout: 360
+#
+#    InferStationaryStates:
+#      Type: AWS::SQS::Queue
+#      Properties:
+#        DelaySeconds: 0
+#        MaximumMessageSize: 1024
+#        MessageRetentionPeriod: 60
+#        QueueName: infer-stationary-states
+#        VisibilityTimeout: 360
 
     SNSTopicQueuePolicy:
       Type: AWS::SQS::QueuePolicy
@@ -175,23 +175,23 @@ resources:
         Queues:
           - Ref: "InferAutopilotStates"
 
-    SNSTopicQueuePolicy3:
-      Type: AWS::SQS::QueuePolicy
-      Properties:
-        PolicyDocument:
-          Version: "2012-10-17"
-          Statement:
-            - Sid: "allow-sns-messages3"
-              Effect: Allow
-              Principal:
-                Service: "sns.amazonaws.com"
-              Resource: !GetAtt
-                - "InferStationaryStates"
-                - "Arn"
-              Action:
-                - "sqs:SendMessage"
-              Condition:
-                ArnEquals:
-                  "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
-        Queues:
-          - Ref: "InferStationaryStates"
+#    SNSTopicQueuePolicy3:
+#      Type: AWS::SQS::QueuePolicy
+#      Properties:
+#        PolicyDocument:
+#          Version: "2012-10-17"
+#          Statement:
+#            - Sid: "allow-sns-messages3"
+#              Effect: Allow
+#              Principal:
+#                Service: "sns.amazonaws.com"
+#              Resource: !GetAtt
+#                - "InferStationaryStates"
+#                - "Arn"
+#              Action:
+#                - "sqs:SendMessage"
+#              Condition:
+#                ArnEquals:
+#                  "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
+#        Queues:
+#          - Ref: "InferStationaryStates"
