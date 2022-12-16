@@ -48,7 +48,7 @@ functions:
       TZ: UTC
     role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
     events:
-      - sqs: arn:aws:sqs:us-west-2:963414178352:parse_canserver
+      - sqs: arn:aws:sqs:us-west-2:963414178352:
     layers:
       - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
 
@@ -62,7 +62,7 @@ functions:
       TZ: UTC
     role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
     events:
-      - sqs: arn:aws:sqs:us-west-2:963414178352:infer_DMD_autopilot
+      - sqs: arn:aws:sqs:us-west-2:963414178352:ParseCanserver
     layers:
       - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
 
@@ -76,7 +76,7 @@ functions:
       TZ: UTC
     role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
     events:
-      - sqs: arn:aws:sqs:us-west-2:963414178352:infer_DMD_stationary
+      - sqs: arn:aws:sqs:us-west-2:963414178352:InferStationaryStates
     layers:
       - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
 
@@ -90,16 +90,36 @@ resources:
         Subscription:
           - Endpoint:
               Fn::GetAtt:
-                - "MyFirstQueue"
+                - "ParseCanserver"
+                - "Arn"
+                - "InferAutopilotStates"
+                - "Arn"
+                - "InferStationaryStates"
                 - "Arn"
             Protocol: "sqs"
-    MyFirstQueue:
+    ParseCanserver:
       Type: AWS::SQS::Queue
       Properties:
         DelaySeconds: 0
         MaximumMessageSize: 1024
         MessageRetentionPeriod: 60
-        QueueName: my-first-queue
+        QueueName: parse-canserver
+        VisibilityTimeout: 360
+    InferAutopilotStates:
+      Type: AWS::SQS::Queue
+      Properties:
+        DelaySeconds: 0
+        MaximumMessageSize: 1024
+        MessageRetentionPeriod: 60
+        QueueName: infer-autopilot-states
+        VisibilityTimeout: 360
+    InferStationaryStates:
+      Type: AWS::SQS::Queue
+      Properties:
+        DelaySeconds: 0
+        MaximumMessageSize: 1024
+        MessageRetentionPeriod: 60
+        QueueName: infer-stationary-states
         VisibilityTimeout: 360
 
     SNSTopicQueuePolicy:
@@ -113,7 +133,11 @@ resources:
               Principal:
                 Service: "sns.amazonaws.com"
               Resource: !GetAtt
-                - "MyFirstQueue"
+                - "ParseCanserver"
+                - "Arn"
+                - "InferAutopilotStates"
+                - "Arn"
+                - "InferStationaryStates"
                 - "Arn"
               Action:
                 - "sqs:SendMessage"
@@ -121,6 +145,8 @@ resources:
                 ArnEquals:
                   "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
         Queues:
-          - Ref: "MyFirstQueue"
+          - Ref: "ParseCanserver"
+          - Ref: "InferStationaryStates"
+          - Ref: "InferAutopilotStates"
 
 
