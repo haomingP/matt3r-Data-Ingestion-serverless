@@ -34,7 +34,7 @@ provider:
         Action:
           - "sns:*"
         Resource:
-          - "arn:aws:sns:us-west-2:963414178352:matt3r-dpl-sns"
+          - "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
 # you can add packaging information here
 #package:
 
@@ -83,7 +83,7 @@ functions:
 # you can add CloudFormation resource templates here
 resources:
   Resources:
-    matt3r-dpl-sns:
+    Matt3rDplSns:
       Type: AWS::SNS::Topic
       Properties:
         TopicName: "matt3r-dpl-sns"
@@ -119,7 +119,7 @@ resources:
                 - "sqs:SendMessage"
               Condition:
                 ArnEquals:
-                  "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:matt3r-dpl-sns"
+                  "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
         Queues:
           - Ref: "MyFirstQueue"
 
