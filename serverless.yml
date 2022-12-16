@@ -35,6 +35,7 @@ provider:
           - "sns:*"
         Resource:
           - "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
+
 # you can add packaging information here
 #package:
 
@@ -90,13 +91,20 @@ resources:
         Subscription:
           - Endpoint:
               Fn::GetAtt:
-                - "ParseCanserver"
-                - "Arn"
-                - "InferAutopilotStates"
-                - "Arn"
-                - "InferStationaryStates"
+                - "ParseCanserver",
                 - "Arn"
             Protocol: "sqs"
+          - Endpoint:
+              Fn::GetAtt:
+                - "InferAutopilotStates",
+                - "Arn"
+            Protocol: "sqs"
+          - Endpoint:
+              Fn::GetAtt:
+                - "InferStationaryStates",
+                - "Arn"
+            Protocol: "sqs"
+
 
     ParseCanserver:
       Type: AWS::SQS::Queue
@@ -131,7 +139,7 @@ resources:
         PolicyDocument:
           Version: "2012-10-17"
           Statement:
-            - Sid: "allow-sns-messages"
+            - Sid: "allow-sns-messages1"
               Effect: Allow
               Principal:
                 Service: "sns.amazonaws.com"
@@ -143,7 +151,17 @@ resources:
               Condition:
                 ArnEquals:
                   "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
-            - Sid: "allow-sns-messages"
+        Queues:
+          - Ref: "ParseCanserver"
+
+
+    SNSTopicQueuePolicy2:
+      Type: AWS::SQS::QueuePolicy
+      Properties:
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Sid: "allow-sns-messages2"
               Effect: Allow
               Principal:
                 Service: "sns.amazonaws.com"
@@ -155,7 +173,16 @@ resources:
               Condition:
                 ArnEquals:
                   "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
-            - Sid: "allow-sns-messages"
+        Queues:
+          - Ref: "InferAutopilotStates"
+
+    SNSTopicQueuePolicy3:
+      Type: AWS::SQS::QueuePolicy
+      Properties:
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Sid: "allow-sns-messages3"
               Effect: Allow
               Principal:
                 Service: "sns.amazonaws.com"
@@ -168,8 +195,4 @@ resources:
                 ArnEquals:
                   "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
         Queues:
-          - Ref: "ParseCanserver"
-          - Ref: "InferAutopilotStates"
           - Ref: "InferStationaryStates"
-
-
