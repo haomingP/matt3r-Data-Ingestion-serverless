@@ -39,6 +39,48 @@ provider:
 # you can add packaging information here
 #package:
 
+functions:
+  parse-canserver-log:
+    handler: parse_canserver_log.lambda_handler
+    timeout: 180
+    memorySize: 512
+    environment:
+      LANDING_BUCKET: matt3r-canserver-us-west-2
+      TZ: UTC
+    role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
+    events:
+      - sqs: arn:aws:sqs:us-west-2:963414178352:ParseCanserver
+    layers:
+      - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
+
+  infer-aautopilot-states:
+    handler: infer_autopilot_states.lambda_handler
+    timeout: 180
+    memorySize: 256
+    environment:
+      RAW_BUCKET: matt3r-canserver-us-west-2
+      LANDING_BUCKET: matt3r-canserver-event-us-west-2
+      TZ: UTC
+    role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
+    events:
+      - sqs: arn:aws:sqs:us-west-2:963414178352:InferAutopilotStates
+    layers:
+      - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
+
+  infer-stationary-states:
+    handler: infer-stationary-states.lambda_handler
+    timeout: 180
+    memorySize: 256
+    environment:
+      RAW_BUCKET: matt3r-canserver-us-west-2
+      LANDING_BUCKET: matt3r-canserver-event-us-west-2
+      TZ: UTC
+    role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
+    events:
+      - sqs: arn:aws:sqs:us-west-2:963414178352:InferStationaryStates
+    layers:
+      - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
+
 # you can add CloudFormation resource templates here
 resources:
   Resources:
@@ -153,46 +195,3 @@ resources:
                   "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
         Queues:
           - Ref: "InferStationaryStates"
-
-
-functions:
-  canserver-parquet-converter:
-    handler: parse_canserver_log.lambda_handler
-    timeout: 180
-    memorySize: 512
-    environment:
-      LANDING_BUCKET: matt3r-canserver-us-west-2
-      TZ: UTC
-    role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
-    events:
-      - sqs: arn:aws:sqs:us-west-2:963414178352:ParseCanserver
-    layers:
-      - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
-
-  infer-aautopilot-states:
-    handler: infer_autopilot_states.lambda_handler
-    timeout: 180
-    memorySize: 256
-    environment:
-      RAW_BUCKET: matt3r-canserver-us-west-2
-      LANDING_BUCKET: matt3r-canserver-event-us-west-2
-      TZ: UTC
-    role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
-    events:
-      - sqs: arn:aws:sqs:us-west-2:963414178352:InferAutopilotStates
-    layers:
-      - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
-
-  infer-stationary-states:
-    handler: infer-stationary-states.lambda_handler
-    timeout: 180
-    memorySize: 256
-    environment:
-      RAW_BUCKET: matt3r-canserver-us-west-2
-      LANDING_BUCKET: matt3r-canserver-event-us-west-2
-      TZ: UTC
-    role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
-    events:
-      - sqs: arn:aws:sqs:us-west-2:963414178352:InferStationaryStates
-    layers:
-      - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
