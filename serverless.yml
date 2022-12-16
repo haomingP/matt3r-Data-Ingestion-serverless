@@ -97,6 +97,7 @@ resources:
                 - "InferStationaryStates"
                 - "Arn"
             Protocol: "sqs"
+
     ParseCanserver:
       Type: AWS::SQS::Queue
       Properties:
@@ -105,6 +106,7 @@ resources:
         MessageRetentionPeriod: 60
         QueueName: parse-canserver
         VisibilityTimeout: 360
+
     InferAutopilotStates:
       Type: AWS::SQS::Queue
       Properties:
@@ -113,6 +115,7 @@ resources:
         MessageRetentionPeriod: 60
         QueueName: infer-autopilot-states
         VisibilityTimeout: 360
+
     InferStationaryStates:
       Type: AWS::SQS::Queue
       Properties:
@@ -135,18 +138,38 @@ resources:
               Resource: !GetAtt
                 - "ParseCanserver"
                 - "Arn"
-                - "InferAutopilotStates"
-                - "Arn"
-                - "InferStationaryStates"
-                - "Arn"
               Action:
                 - "sqs:SendMessage"
               Condition:
                 ArnEquals:
                   "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
+            - Sid: "allow-sns-messages"
+                Effect: Allow
+                Principal:
+                  Service: "sns.amazonaws.com"
+                Resource: !GetAtt
+                  - "InferAutopilotStates"
+                  - "Arn"
+                Action:
+                  - "sqs:SendMessage"
+                Condition:
+                  ArnEquals:
+                    "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
+            - Sid: "allow-sns-messages"
+                Effect: Allow
+                Principal:
+                  Service: "sns.amazonaws.com"
+                Resource: !GetAtt
+                  - "InferStationaryStates"
+                  - "Arn"
+                Action:
+                  - "sqs:SendMessage"
+                Condition:
+                  ArnEquals:
+                    "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
         Queues:
           - Ref: "ParseCanserver"
-          - Ref: "InferStationaryStates"
           - Ref: "InferAutopilotStates"
+          - Ref: "InferStationaryStates"
 
 
