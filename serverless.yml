@@ -91,17 +91,17 @@ resources:
         Subscription:
           - Endpoint:
               Fn::GetAtt:
-                - "ParseCanserver",
+                - "ParseCanserver"
                 - "Arn"
             Protocol: "sqs"
           - Endpoint:
               Fn::GetAtt:
-                - "InferAutopilotStates",
+                - "InferAutopilotStates"
                 - "Arn"
             Protocol: "sqs"
           - Endpoint:
               Fn::GetAtt:
-                - "InferStationaryStates",
+                - "InferStationaryStates"
                 - "Arn"
             Protocol: "sqs"
 
