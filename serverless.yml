@@ -66,7 +66,7 @@ functions:
       - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
 
 # you can add CloudFormation resource templates here
-#resources:
+resources:
  Resources:
    infer_DMD_autopilot:
      Type: AWS::SQS::Queue
