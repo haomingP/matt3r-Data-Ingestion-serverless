@@ -29,7 +29,12 @@ provider:
   region: us-west-2
 # you can define service wide environment variables here
 #  environment:
-
+  iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - "sns:*"
+        Resource:
+          - "arn:aws:sns:us-west-2:963414178352:matt3r-dpl-sns"
 # you can add packaging information here
 #package:
 
@@ -76,5 +81,46 @@ functions:
       - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
 
 # you can add CloudFormation resource templates here
-#resources:
-#  Resources:
+resources:
+  Resources:
+    matt3r-dpl-sns:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: "matt3r-dpl-sns"
+        Subscription:
+          - Endpoint:
+              Fn::GetAtt:
+                - "parse_canserver"
+                - "Arn"
+            Protocol: "sqs"
+    MyFirstQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        DelaySeconds: 0
+        MaximumMessageSize: 1024
+        MessageRetentionPeriod: 60
+        QueueName: my-first-queue
+        VisibilityTimeout: 360
+
+    SNSTopicQueuePolicy:
+      Type: AWS::SQS::QueuePolicy
+      Properties:
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Sid: "allow-sns-messages"
+              Effect: Allow
+              Principal:
+                Service: "sns.amazonaws.com"
+              Resource: !GetAtt
+                - "MyFirstQueue"
+                - "Arn"
+              Action:
+                - "sqs:SendMessage"
+              Condition:
+                ArnEquals:
+                  "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:matt3r-dpl-sns"
+        Queues:
+          - Ref: "MyFirstQueue"
+
+
