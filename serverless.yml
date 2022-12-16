@@ -144,29 +144,29 @@ resources:
                 ArnEquals:
                   "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
             - Sid: "allow-sns-messages"
-                Effect: Allow
-                Principal:
-                  Service: "sns.amazonaws.com"
-                Resource: !GetAtt
-                  - "InferAutopilotStates"
-                  - "Arn"
-                Action:
-                  - "sqs:SendMessage"
-                Condition:
-                  ArnEquals:
-                    "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
+              Effect: Allow
+              Principal:
+                Service: "sns.amazonaws.com"
+              Resource: !GetAtt
+                - "InferAutopilotStates"
+                - "Arn"
+              Action:
+                - "sqs:SendMessage"
+              Condition:
+                ArnEquals:
+                  "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
             - Sid: "allow-sns-messages"
-                Effect: Allow
-                Principal:
-                  Service: "sns.amazonaws.com"
-                Resource: !GetAtt
-                  - "InferStationaryStates"
-                  - "Arn"
-                Action:
-                  - "sqs:SendMessage"
-                Condition:
-                  ArnEquals:
-                    "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
+              Effect: Allow
+              Principal:
+                Service: "sns.amazonaws.com"
+              Resource: !GetAtt
+                - "InferStationaryStates"
+                - "Arn"
+              Action:
+                - "sqs:SendMessage"
+              Condition:
+                ArnEquals:
+                  "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
         Queues:
           - Ref: "ParseCanserver"
           - Ref: "InferAutopilotStates"
