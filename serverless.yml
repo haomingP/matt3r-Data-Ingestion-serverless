@@ -66,9 +66,9 @@ functions:
       - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
 
 # you can add CloudFormation resource templates here
-resources:
-  Resources:
-    Topic:
-      Type: AWS::SNS::Topic
-      Properties:
-        TopicName: haoming-dpl-sns
+#resources:
+#  Resources:
+#    Topic:
+#      Type: AWS::SNS::Topic
+#      Properties:
+#        TopicName: haoming-dpl-sns
