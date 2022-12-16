@@ -67,32 +67,8 @@ functions:
 
 # you can add CloudFormation resource templates here
 resources:
- Resources:
-   infer_DMD_autopilot:
-     Type: AWS::SQS::Queue
-
-   haoming-dpl-sns:
-     Type: AWS::SNS::Topic
-     Properties:
-       Subsription:
-         - Protocol: sqs
-           Endpoint: arn:aws:sqs:us-west-2:963414178352:infer_DMD_autopilot
-
-   SnsToSqsPolicy:
-     Type: AWS::SQS::QueuePolicy
-     Properties:
-       PolicyDocument:
-         Version: "2012-10-17"
-         Statement:
-           - Sid: "Allow SNS publish to SQS"
-             Effect: Allow
-             Principal:
-               Service: "sns.amazonaws.com"
-             Resource: !GetAtt infer_DMD_autopilot.Arn
-             Action: SQS:SendMessage
-             Condition:
-               ArnEquals:
-                 aws:SourceArn: !Ref haoming-dpl-sns
-       Queues:
-         - Ref: infer_DMD_autopilot
-
+  Resources:
+    Topic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: haoming-dpl-sns
