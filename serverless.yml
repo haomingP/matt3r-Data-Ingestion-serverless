@@ -35,6 +35,21 @@ provider:
           - "sns:*"
         Resource:
           - "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
+      - Effect: Allow
+        Action:
+          - "sqs:*"
+        Resource:
+          - "arn:aws:sns:us-west-2:963414178352:ParseCanserver"
+      - Effect: Allow
+        Action:
+          - "sqs:*"
+        Resource:
+          - "arn:aws:sns:us-west-2:963414178352:InferAutopilotStates"
+      - Effect: Allow
+        Action:
+          - "sqs:*"
+        Resource:
+          - "arn:aws:sns:us-west-2:963414178352:InferStationaryStates"
 
 # you can add packaging information here
 #package:
@@ -48,8 +63,12 @@ functions:
       LANDING_BUCKET: matt3r-canserver-us-west-2
       TZ: UTC
     role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
-#    events:
-#      - sqs: arn:aws:sqs:us-west-2:963414178352:ParseCanserver
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - ParseCanserver
+              - Arn
     layers:
       - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
 
@@ -62,8 +81,12 @@ functions:
       LANDING_BUCKET: matt3r-canserver-event-us-west-2
       TZ: UTC
     role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
-#    events:
-#      - sqs: arn:aws:sqs:us-west-2:963414178352:InferAutopilotStates
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - InferAutopilotStates
+              - Arn
     layers:
       - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
 
@@ -76,8 +99,12 @@ functions:
       LANDING_BUCKET: matt3r-canserver-event-us-west-2
       TZ: UTC
     role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
-#    events:
-#      - sqs: arn:aws:sqs:us-west-2:963414178352:InferStationaryStates
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - InferStationaryStates
+              - Arn
     layers:
       - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
 
