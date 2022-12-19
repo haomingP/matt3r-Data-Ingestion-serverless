@@ -60,7 +60,8 @@ functions:
     timeout: 180
     memorySize: 512
     environment:
-      LANDING_BUCKET: matt3r-canserver-us-west-2
+      LANDING_BUCKET: haoming-test-bucket
+      RAW_BUCKET: haoming-raw-test
       TZ: UTC
     role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
     events:
@@ -72,13 +73,13 @@ functions:
     layers:
       - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
 
-  infer-autopilot-states:
+  infer-aautopilot-states:
     handler: infer_autopilot_states.lambda_handler
     timeout: 180
     memorySize: 256
     environment:
-      RAW_BUCKET: matt3r-canserver-us-west-2
-      LANDING_BUCKET: matt3r-canserver-event-us-west-2
+      RAW_BUCKET: haoming-test-bucket
+      LANDING_BUCKET: haoming-event-test
       TZ: UTC
     role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
     events:
@@ -95,8 +96,8 @@ functions:
     timeout: 180
     memorySize: 256
     environment:
-      RAW_BUCKET: matt3r-canserver-us-west-2
-      LANDING_BUCKET: matt3r-canserver-event-us-west-2
+      RAW_BUCKET: haoming-test-bucket
+      LANDING_BUCKET: haoming-event-test
       TZ: UTC
     role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
     events:
@@ -107,7 +108,6 @@ functions:
               - Arn
     layers:
       - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
-
 # you can add CloudFormation resource templates here
 resources:
   Resources:
