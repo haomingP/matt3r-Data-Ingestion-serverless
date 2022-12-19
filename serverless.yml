@@ -263,7 +263,7 @@ resources:
             - Sid: "allow-s3-nitification"
               Effect: Allow
               Principal:
-                Service: "s3.amazonaws.com"
+                Service: "sns.amazonaws.com"
               Resource: "arn:aws:s3:::haoming-test-bucket"
               Action:
                 - "s3:*"
@@ -281,7 +281,7 @@ resources:
             - Sid: "allow-s3-nitification"
               Effect: Allow
               Principal:
-                Service: "s3.amazonaws.com"
+                Service: "sns.amazonaws.com"
               Resource: "arn:aws:s3:::haoming-raw-test"
               Action:
                 - "s3:*"
