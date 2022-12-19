@@ -44,7 +44,7 @@ provider:
         Action:
           - "s3:PutObject"
           - "s3:GetObject"
-        Resource: "arn:aws:s3:::haoming-convert-to-parquet-test/*"
+        Resource: "arn:aws:s3:::haoming-event-test/*"
       - Effect: Allow
         Action:
           - "sns:*"
@@ -76,7 +76,7 @@ provider:
       versioningConfiguration:
         Status: Enabled
     bucketThree:
-      name: haoming-convert-to-parquet-test
+      name: haoming-event-test
       versioningConfiguration:
         Status: Enabled
 
@@ -108,7 +108,7 @@ functions:
     memorySize: 256
     environment:
       RAW_BUCKET: haoming-test-bucket
-      LANDING_BUCKET: haoming-convert-to-parquet-test
+      LANDING_BUCKET: haoming-event-test
       TZ: UTC
     role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
     events:
@@ -126,7 +126,7 @@ functions:
     memorySize: 256
     environment:
       RAW_BUCKET: haoming-test-bucket
-      LANDING_BUCKET: haoming-convert-to-parquet-test
+      LANDING_BUCKET: haoming-event-test
       TZ: UTC
     role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
     events:
