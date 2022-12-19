@@ -263,10 +263,8 @@ resources:
               Effect: Allow
               Principal:
                 AWS: "*"
-#              Resource: "arn:aws:s3:::haoming-raw-test"
               Resource: "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
               Action:
-                - "s3:*"
                 - "sns:Publish"
               Condition:
                 ArnEquals:
