@@ -264,9 +264,7 @@ resources:
               Effect: Allow
               Principal:
                 Service: "sns.amazonaws.com"
-              Resource: !GetAtt
-                - "haoming-test-bucket"
-                - "Arn"
+              Resource: "arn:aws:s3:::haoming-test-bucket"
               Action:
                 - "s3:*"
               Condition:
@@ -284,9 +282,7 @@ resources:
               Effect: Allow
               Principal:
                 Service: "sns.amazonaws.com"
-              Resource: !GetAtt
-                - "haoming-raw-test"
-                - "Arn"
+              Resource: "arn:aws:s3:::haoming-raw-test"
               Action:
                 - "s3:*"
               Condition:
