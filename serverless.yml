@@ -65,20 +65,20 @@ provider:
           - "sqs:*"
         Resource:
           - "arn:aws:sns:us-west-2:963414178352:InferStationaryStates"
-
-  s3:
-    bucketOne:
-      name: haoming-raw-test
-      versioningConfiguration:
-        Status: Enabled
-    bucketTwo:
-      name: haoming-test-bucket
-      versioningConfiguration:
-        Status: Enabled
-    bucketThree:
-      name: haoming-event-test
-      versioningConfiguration:
-        Status: Enabled
+#
+#  s3:
+#    bucketOne:
+#      name: haoming-raw-test
+#      versioningConfiguration:
+#        Status: Enabled
+#    bucketTwo:
+#      name: haoming-test-bucket
+#      versioningConfiguration:
+#        Status: Enabled
+#    bucketThree:
+#      name: haoming-event-test
+#      versioningConfiguration:
+#        Status: Enabled
 
 # you can add packaging information here
 #package:
