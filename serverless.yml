@@ -30,6 +30,16 @@ provider:
 # you can define service wide environment variables here
 #  environment:
   iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "s3:PutObject"
+          - "s3:GetObject"
+        Resource: "arn:aws:s3:::matt3r-canserver-us-west-2/*"
+      - Effect: "Allow"
+        Action:
+          - "s3:PutObject"
+          - "s3:GetObject"
+        Resource: "arn:aws:s3:::matt3r-canserver-event-us-west-2/*"
       - Effect: Allow
         Action:
           - "sns:*"
@@ -222,3 +232,24 @@ resources:
                   "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
         Queues:
           - Ref: "InferStationaryStates"
+
+    SNSTopicS3Policy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket: "arn:aws:s3:::matt3r-canserver-us-west-2/*"
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Sid: "allow-s3-nitification"
+              Effect: Allow
+              Principal:
+                Service: "s3.amazonaws.com"
+              Resource: !GetAtt
+                - "InferStationaryStates"
+                - "Arn"
+              Action:
+                - "s3:PutObject"
+                - "s3:GetObject"
+              Condition:
+                ArnEquals:
+                  "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
