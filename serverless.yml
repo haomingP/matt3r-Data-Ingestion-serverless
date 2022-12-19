@@ -256,22 +256,23 @@ resources:
     SNSTopicS3Policy1:
       Type: AWS::SNS::TopicPolicy
       Properties:
-        Topics:
-          - "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
         PolicyDocument:
           Version: "2012-10-17"
           Statement:
             - Sid: "allow-s3-nitification2"
               Effect: Allow
               Principal:
-                Service: "s3.amazonaws.com"
-              Resource: "arn:aws:s3:::haoming-raw-test"
+                AWS: "*"
+#              Resource: "arn:aws:s3:::haoming-raw-test"
+              Resource: "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
               Action:
                 - "s3:*"
                 - "sns:Publish"
               Condition:
                 ArnEquals:
-                  "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
+                  "aws:SourceArn": "arn:aws:s3:::haoming-raw-test"
+        Topics:
+          - !Ref Matt3rDplSns
 
 #    SNSTopicS3Policy2:
 #      Type: AWS::S3::BucketPolicy
