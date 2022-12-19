@@ -7,10 +7,12 @@ import awswrangler as wr
 import datetime
 import time
 import os
+import json
 
 print("Loading Function..")
 
 # landing bucket and prefix
+RAW_BUCKET = os.environ.get('RAW_BUCKET')
 LANDING_BUCKET = os.environ.get('LANDING_BUCKET')
 TZ = os.environ.get('TZ')
 
@@ -93,9 +95,15 @@ def lambda_handler(event, context):
     print("=====================================================")
     print(event)
 
-    source_bucket = event['Records'][0]['s3']['bucket']['name']
-    object_key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'], encoding='utf-8')
-    s3_opt = event['Records'][0]['eventName']
+    body = event['Records'][0]['body']
+    b = json.loads(body)
+    Message = b['Message']
+    mess = json.loads(Message)
+    object_key = urllib.parse.unquote_plus(mess['Records'][0]['s3']['object']['key'], encoding='utf-8')
+
+    source_bucket = RAW_BUCKET
+    # object_key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'], encoding='utf-8')
+    s3_opt = mess['Records'][0]['eventName']
 
     # Only uploead will trigger function
     if 'ObjectCreated' in s3_opt:

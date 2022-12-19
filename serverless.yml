@@ -63,9 +63,18 @@ provider:
 
   s3:
     bucketOne:
+      name: haoming-raw-test
+      versioningConfiguration:
+        Status: Enabled
+    bucketTwo:
       name: haoming-test-bucket
       versioningConfiguration:
         Status: Enabled
+    bucketThree:
+      name: haoming-convert-to-parquet-test
+      versioningConfiguration:
+        Status: Enabled
+
 # you can add packaging information here
 #package:
 
@@ -76,6 +85,7 @@ functions:
     memorySize: 512
     environment:
       LANDING_BUCKET: haoming-test-bucket
+      RAW_BUCKET：haoming-raw-test
       TZ: UTC
     role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
     events:
@@ -249,7 +259,7 @@ resources:
         Queues:
           - Ref: "InferStationaryStates"
 
-    SNSTopicS3Policy:
+    SNSTopicS3Policy1:
       Type: AWS::S3::BucketPolicy
       Properties:
         Bucket: haoming-test-bucket
@@ -261,6 +271,24 @@ resources:
               Principal:
                 Service: "s3.amazonaws.com"
               Resource: "arn:aws:s3:::haoming-test-bucket"
+              Action:
+                - "s3:*"
+              Condition:
+                ArnEquals:
+                  "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
+
+    SNSTopicS3Policy2:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket: haoming-raw-test
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Sid: "allow-s3-nitification"
+              Effect: Allow
+              Principal:
+                Service: "s3.amazonaws.com"
+              Resource: "arn:aws:s3:::haoming-raw-test"
               Action:
                 - "s3:*"
               Condition:
