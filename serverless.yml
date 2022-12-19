@@ -142,6 +142,12 @@ resources:
                 - "Arn"
             Protocol: "sqs"
 
+    haoming-test-bucket:
+      Type: AWS::S3::Bucket
+
+    haoming-convert-to-parquet-test:
+      Type: AWS::S3::Bucket
+
     ParseCanserver:
       Type: AWS::SQS::Queue
       Properties:
