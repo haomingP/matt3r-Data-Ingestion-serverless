@@ -61,6 +61,11 @@ provider:
         Resource:
           - "arn:aws:sns:us-west-2:963414178352:InferStationaryStates"
 
+  s3:
+    bucketOne:
+      name: haoming-test-bucket
+      versioningConfiguration:
+        Status: Enabled
 # you can add packaging information here
 #package:
 
@@ -247,7 +252,7 @@ resources:
     SNSTopicS3Policy:
       Type: AWS::S3::BucketPolicy
       Properties:
-        Bucket: haomingTestBucket
+        Bucket: haoming-test-bucket
         PolicyDocument:
           Version: "2012-10-17"
           Statement:
