@@ -254,37 +254,39 @@ resources:
           - Ref: "InferStationaryStates"
 
     SNSTopicS3Policy1:
-      Type: AWS::S3::BucketPolicy
+      Type: AWS::SNS::TopicPolicy
       Properties:
-        Bucket: haoming-test-bucket
+        Topics:
+          - "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
         PolicyDocument:
           Version: "2012-10-17"
           Statement:
-            - Sid: "allow-s3-nitification"
+            - Sid: "allow-s3-nitification2"
               Effect: Allow
               Principal:
-                Service: "sns.amazonaws.com"
-              Resource: "arn:aws:s3:::haoming-test-bucket"
+                Service: "s3.amazonaws.com"
+              Resource: "arn:aws:s3:::haoming-raw-test"
               Action:
                 - "s3:*"
+                - "sns:Publish"
               Condition:
                 ArnEquals:
                   "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
 
-    SNSTopicS3Policy2:
-      Type: AWS::S3::BucketPolicy
-      Properties:
-        Bucket: haoming-raw-test
-        PolicyDocument:
-          Version: "2012-10-17"
-          Statement:
-            - Sid: "allow-s3-nitification"
-              Effect: Allow
-              Principal:
-                Service: "sns.amazonaws.com"
-              Resource: "arn:aws:s3:::haoming-raw-test"
-              Action:
-                - "s3:*"
-              Condition:
-                ArnEquals:
-                  "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
+#    SNSTopicS3Policy2:
+#      Type: AWS::S3::BucketPolicy
+#      Properties:
+#        Bucket: haoming-test-bucket
+#        PolicyDocument:
+#          Version: "2012-10-17"
+#          Statement:
+#            - Sid: "allow-s3-nitification"
+#              Effect: Allow
+#              Principal:
+#                Service: "sns.amazonaws.com"
+#              Resource: "arn:aws:s3:::haoming-test-bucket"
+#              Action:
+#                - "s3:*"
+#              Condition:
+#                ArnEquals:
+#                  "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
