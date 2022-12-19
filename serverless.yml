@@ -129,6 +129,8 @@ resources:
       Condition:
         ArnEquals:
           "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
+        ArnLike:
+          "AWS:SourceArn": "arn:aws:s3:*:*:haoming-test-bucket"
       Properties:
         TopicName: "matt3r-dpl-sns"
         Subscription:
