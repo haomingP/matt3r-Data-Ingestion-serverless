@@ -30,6 +30,16 @@ provider:
 # you can define service wide environment variables here
 #  environment:
   iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "s3:PutObject"
+          - "s3:GetObject"
+        Resource: "arn:aws:s3:::haoming-test-bucket/*"
+      - Effect: "Allow"
+        Action:
+          - "s3:PutObject"
+          - "s3:GetObject"
+        Resource: "arn:aws:s3:::haoming-convert-to-parquet-test/*"
       - Effect: Allow
         Action:
           - "sns:*"
@@ -51,6 +61,11 @@ provider:
         Resource:
           - "arn:aws:sns:us-west-2:963414178352:InferStationaryStates"
 
+  s3:
+    bucketOne:
+      name: haoming-test-bucket
+      versioningConfiguration:
+        Status: Enabled
 # you can add packaging information here
 #package:
 
@@ -60,7 +75,7 @@ functions:
     timeout: 180
     memorySize: 512
     environment:
-      LANDING_BUCKET: matt3r-canserver-us-west-2
+      LANDING_BUCKET: haoming-test-bucket
       TZ: UTC
     role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
     events:
@@ -72,13 +87,13 @@ functions:
     layers:
       - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
 
-  infer-autopilot-states:
+  infer-aautopilot-states:
     handler: infer_autopilot_states.lambda_handler
     timeout: 180
     memorySize: 256
     environment:
-      RAW_BUCKET: matt3r-canserver-us-west-2
-      LANDING_BUCKET: matt3r-canserver-event-us-west-2
+      RAW_BUCKET: haoming-test-bucket
+      LANDING_BUCKET: haoming-convert-to-parquet-test
       TZ: UTC
     role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
     events:
@@ -95,8 +110,8 @@ functions:
     timeout: 180
     memorySize: 256
     environment:
-      RAW_BUCKET: matt3r-canserver-us-west-2
-      LANDING_BUCKET: matt3r-canserver-event-us-west-2
+      RAW_BUCKET: haoming-test-bucket
+      LANDING_BUCKET: haoming-convert-to-parquet-test
       TZ: UTC
     role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
     events:
@@ -131,6 +146,17 @@ resources:
                 - "InferStationaryStates"
                 - "Arn"
             Protocol: "sqs"
+
+
+    #    haomingTestBucket:
+#      Type: AWS::S3::Bucket
+#      Properties:
+#        BucketName: haoming-test-bucket
+#
+#    haomingConvertToParquetTest:
+#      Type: AWS::S3::Bucket
+#      Properties:
+#        BucketName: haoming-convert-to-parquet-test
 
     ParseCanserver:
       Type: AWS::SQS::Queue
@@ -222,3 +248,21 @@ resources:
                   "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
         Queues:
           - Ref: "InferStationaryStates"
+
+    SNSTopicS3Policy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket: haoming-test-bucket
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Sid: "allow-s3-nitification"
+              Effect: Allow
+              Principal:
+                Service: "s3.amazonaws.com"
+              Resource: "arn:aws:s3:::haoming-test-bucket"
+              Action:
+                - "s3:*"
+              Condition:
+                ArnEquals:
+                  "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
