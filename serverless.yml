@@ -256,7 +256,7 @@ resources:
         PolicyDocument:
           Version: "2012-10-17"
           Statement:
-            - Sid: "allow-s3-nitification"
+            - Sid: "allow-s3-notification"
               Effect: Allow
               Principal:
                 Service: "s3.amazonaws.com"
