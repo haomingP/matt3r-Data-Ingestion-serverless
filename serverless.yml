@@ -142,11 +142,15 @@ resources:
                 - "Arn"
             Protocol: "sqs"
 
-    haoming-test-bucket:
+    haomingTestBucket:
       Type: AWS::S3::Bucket
+      Properties:
+        BucketName: haoming-test-bucket
 
-    haoming-convert-to-parquet-test:
+    haomingConvertToParquetTest:
       Type: AWS::S3::Bucket
+      Properties:
+        BucketName: haoming-convert-to-parquet-test
 
     ParseCanserver:
       Type: AWS::SQS::Queue
@@ -242,7 +246,7 @@ resources:
     SNSTopicS3Policy:
       Type: AWS::S3::BucketPolicy
       Properties:
-        Bucket: "arn:aws:s3:::haoming-test-bucket"
+        Bucket: haomingTestBucket
         PolicyDocument:
           Version: "2012-10-17"
           Statement:
@@ -250,9 +254,7 @@ resources:
               Effect: Allow
               Principal:
                 Service: "s3.amazonaws.com"
-              Resource: !GetAtt
-                - "haoming-test-bucket"
-                - "Arn"
+              Resource: "arn:aws:s3:::haoming-test-bucket"
               Action:
                 - "s3:PutObject"
                 - "s3:GetObject"
