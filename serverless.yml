@@ -34,12 +34,12 @@ provider:
         Action:
           - "s3:PutObject"
           - "s3:GetObject"
-        Resource: "arn:aws:s3:::matt3r-canserver-us-west-2/*"
+        Resource: "arn:aws:s3:::haoming-test-bucket/*"
       - Effect: "Allow"
         Action:
           - "s3:PutObject"
           - "s3:GetObject"
-        Resource: "arn:aws:s3:::matt3r-canserver-event-us-west-2/*"
+        Resource: "arn:aws:s3:::haoming-convert-to-parquet-test/*"
       - Effect: Allow
         Action:
           - "sns:*"
@@ -70,7 +70,7 @@ functions:
     timeout: 180
     memorySize: 512
     environment:
-      LANDING_BUCKET: matt3r-canserver-us-west-2
+      LANDING_BUCKET: haoming-test-bucket
       TZ: UTC
     role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
     events:
@@ -87,8 +87,8 @@ functions:
     timeout: 180
     memorySize: 256
     environment:
-      RAW_BUCKET: matt3r-canserver-us-west-2
-      LANDING_BUCKET: matt3r-canserver-event-us-west-2
+      RAW_BUCKET: haoming-test-bucket
+      LANDING_BUCKET: haoming-convert-to-parquet-test
       TZ: UTC
     role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
     events:
@@ -105,8 +105,8 @@ functions:
     timeout: 180
     memorySize: 256
     environment:
-      RAW_BUCKET: matt3r-canserver-us-west-2
-      LANDING_BUCKET: matt3r-canserver-event-us-west-2
+      RAW_BUCKET: haoming-test-bucket
+      LANDING_BUCKET: haoming-convert-to-parquet-test
       TZ: UTC
     role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
     events:
@@ -236,7 +236,7 @@ resources:
     SNSTopicS3Policy:
       Type: AWS::S3::BucketPolicy
       Properties:
-        Bucket: "arn:aws:s3:::matt3r-canserver-us-west-2/*"
+        Bucket: "arn:aws:s3:::haoming-test-bucket"
         PolicyDocument:
           Version: "2012-10-17"
           Statement:
@@ -245,7 +245,7 @@ resources:
               Principal:
                 Service: "s3.amazonaws.com"
               Resource: !GetAtt
-                - "InferStationaryStates"
+                - "haoming-test-bucket"
                 - "Arn"
               Action:
                 - "s3:PutObject"
