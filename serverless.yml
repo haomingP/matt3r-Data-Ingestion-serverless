@@ -90,7 +90,7 @@ functions:
     memorySize: 512
     environment:
       LANDING_BUCKET: haoming-test-bucket
-      RAW_BUCKET：haoming-raw-test
+      RAW_BUCKET: haoming-raw-test
       TZ: UTC
     role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
     events:
