@@ -30,21 +30,6 @@ provider:
 # you can define service wide environment variables here
 #  environment:
   iamRoleStatements:
-      - Effect: "Allow"
-        Action:
-          - "s3:PutObject"
-          - "s3:GetObject"
-        Resource: "arn:aws:s3:::haoming-raw-test/*"
-      - Effect: "Allow"
-        Action:
-          - "s3:PutObject"
-          - "s3:GetObject"
-        Resource: "arn:aws:s3:::haoming-test-bucket/*"
-      - Effect: "Allow"
-        Action:
-          - "s3:PutObject"
-          - "s3:GetObject"
-        Resource: "arn:aws:s3:::haoming-event-test/*"
       - Effect: Allow
         Action:
           - "sns:*"
@@ -65,20 +50,6 @@ provider:
           - "sqs:*"
         Resource:
           - "arn:aws:sns:us-west-2:963414178352:InferStationaryStates"
-#
-#  s3:
-#    bucketOne:
-#      name: haoming-raw-test
-#      versioningConfiguration:
-#        Status: Enabled
-#    bucketTwo:
-#      name: haoming-test-bucket
-#      versioningConfiguration:
-#        Status: Enabled
-#    bucketThree:
-#      name: haoming-event-test
-#      versioningConfiguration:
-#        Status: Enabled
 
 # you can add packaging information here
 #package:
@@ -89,8 +60,7 @@ functions:
     timeout: 180
     memorySize: 512
     environment:
-      LANDING_BUCKET: haoming-test-bucket
-      RAW_BUCKET: haoming-raw-test
+      LANDING_BUCKET: matt3r-canserver-us-west-2
       TZ: UTC
     role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
     events:
@@ -102,13 +72,13 @@ functions:
     layers:
       - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
 
-  infer-aautopilot-states:
+  infer-autopilot-states:
     handler: infer_autopilot_states.lambda_handler
     timeout: 180
     memorySize: 256
     environment:
-      RAW_BUCKET: haoming-test-bucket
-      LANDING_BUCKET: haoming-event-test
+      RAW_BUCKET: matt3r-canserver-us-west-2
+      LANDING_BUCKET: matt3r-canserver-event-us-west-2
       TZ: UTC
     role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
     events:
@@ -125,8 +95,8 @@ functions:
     timeout: 180
     memorySize: 256
     environment:
-      RAW_BUCKET: haoming-test-bucket
-      LANDING_BUCKET: haoming-event-test
+      RAW_BUCKET: matt3r-canserver-us-west-2
+      LANDING_BUCKET: matt3r-canserver-event-us-west-2
       TZ: UTC
     role: 'arn:aws:iam::963414178352:role/haoming-lambda-parquet-test-role'
     events:
@@ -252,39 +222,3 @@ resources:
                   "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
         Queues:
           - Ref: "InferStationaryStates"
-
-    SNSTopicS3Policy1:
-      Type: AWS::S3::BucketPolicy
-      Properties:
-        Bucket: haoming-test-bucket
-        PolicyDocument:
-          Version: "2012-10-17"
-          Statement:
-            - Sid: "allow-s3-nitification"
-              Effect: Allow
-              Principal:
-                Service: "s3.amazonaws.com"
-              Resource: "arn:aws:s3:::haoming-test-bucket"
-              Action:
-                - "s3:*"
-              Condition:
-                ArnEquals:
-                  "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
-
-    SNSTopicS3Policy2:
-      Type: AWS::S3::BucketPolicy
-      Properties:
-        Bucket: haoming-raw-test
-        PolicyDocument:
-          Version: "2012-10-17"
-          Statement:
-            - Sid: "allow-s3-nitification"
-              Effect: Allow
-              Principal:
-                Service: "s3.amazonaws.com"
-              Resource: "arn:aws:s3:::haoming-raw-test"
-              Action:
-                - "s3:*"
-              Condition:
-                ArnEquals:
-                  "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
