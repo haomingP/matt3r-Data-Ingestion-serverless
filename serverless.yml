@@ -123,14 +123,6 @@ resources:
   Resources:
     Matt3rDplSns:
       Type: AWS::SNS::Topic
-      Principle: "sns.amazonaws.com"
-      Action:
-        - "SNS:Publish"
-      Condition:
-        ArnEquals:
-          "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
-        ArnLike:
-          "AWS:SourceArn": "arn:aws:s3:*:*:haoming-test-bucket"
       Properties:
         TopicName: "matt3r-dpl-sns"
         Subscription:
@@ -150,7 +142,8 @@ resources:
                 - "Arn"
             Protocol: "sqs"
 
-#    haomingTestBucket:
+
+    #    haomingTestBucket:
 #      Type: AWS::S3::Bucket
 #      Properties:
 #        BucketName: haoming-test-bucket
@@ -251,21 +244,20 @@ resources:
         Queues:
           - Ref: "InferStationaryStates"
 
-#    SNSTopicS3Policy:
-#      Type: AWS::S3::BucketPolicy
-#      Properties:
-#        Bucket: haomingTestBucket
-#        PolicyDocument:
-#          Version: "2012-10-17"
-#          Statement:
-#            - Sid: "allow-s3-nitification"
-#              Effect: Allow
-#              Principal:
-#                Service: "s3.amazonaws.com"
-#              Resource: "arn:aws:s3:::haoming-test-bucket"
-#              Action:
-#                - "s3:PutObject"
-#                - "s3:GetObject"
-#              Condition:
-#                ArnEquals:
-#                  "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
+    SNSTopicS3Policy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket: haomingTestBucket
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Sid: "allow-s3-nitification"
+              Effect: Allow
+              Principal:
+                Service: "s3.amazonaws.com"
+              Resource: "arn:aws:s3:::haoming-test-bucket"
+              Action:
+                - "s3:*"
+              Condition:
+                ArnEquals:
+                  "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
