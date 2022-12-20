@@ -185,6 +185,7 @@ resources:
               Condition:
                 ArnEquals:
                   "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
+                  Ref: Matt3rDplSns
         Queues:
           - Ref: "ParseCanserver"
 
@@ -207,6 +208,7 @@ resources:
               Condition:
                 ArnEquals:
                   "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
+                  Ref: Matt3rDplSns
         Queues:
           - Ref: "InferAutopilotStates"
 
@@ -228,6 +230,7 @@ resources:
               Condition:
                 ArnEquals:
                   "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
+                  Ref: Matt3rDplSns
         Queues:
           - Ref: "InferStationaryStates"
 
