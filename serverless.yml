@@ -38,7 +38,7 @@ provider:
       - Effect: "Allow"
         Action:
           - "sns:*"
-        Resource: "arn:aws:sqs:us-west-2::"
+        Resource: "arn:aws:sns:us-west-2::"
       - Effect: "Allow"
         Action:
           - sqs:DeleteMessage
@@ -127,22 +127,53 @@ resources:
       Type: AWS::SNS::Topic
       Properties:
         TopicName: "matt3r-dpl-sns"
-        Subscription:
-          - Endpoint:
-              Fn::GetAtt:
-                - "ParseCanserver"
-                - "Arn"
-            Protocol: "sqs"
-          - Endpoint:
-              Fn::GetAtt:
-                - "InferAutopilotStates"
-                - "Arn"
-            Protocol: "sqs"
-          - Endpoint:
-              Fn::GetAtt:
-                - "InferStationaryStates"
-                - "Arn"
-            Protocol: "sqs"
+#        Subscription:
+#          - Endpoint:
+#              Fn::GetAtt:
+#                - "ParseCanserver"
+#                - "Arn"
+#            Protocol: "sqs"
+#          - Endpoint:
+#              Fn::GetAtt:
+#                - "InferAutopilotStates"
+#                - "Arn"
+#            Protocol: "sqs"
+#          - Endpoint:
+#              Fn::GetAtt:
+#                - "InferStationaryStates"
+#                - "Arn"
+#            Protocol: "sqs"
+
+    Subscription1:
+      Type: 'AWS::SNS::Subscription'
+      Properties:
+        TopicArn: !Ref Matt3rDplSns
+        Endpoint:
+          Fn::GetAtt:
+            - "ParseCanserver"
+            - "Arn"
+        Protocol: sqs
+        RawMessageDelivery: 'true'
+    Subscription2:
+      Type: 'AWS::SNS::Subscription'
+      Properties:
+        TopicArn: !Ref Matt3rDplSns
+        Endpoint:
+          Fn::GetAtt:
+            - "InferAutopilotStates"
+            - "Arn"
+        Protocol: sqs
+        RawMessageDelivery: 'true'
+    Subscription3:
+      Type: 'AWS::SNS::Subscription'
+      Properties:
+        TopicArn: !Ref Matt3rDplSns
+        Endpoint:
+          Fn::GetAtt:
+            - "InferStationaryStates"
+            - "Arn"
+        Protocol: sqs
+        RawMessageDelivery: 'true'
 
     ParseCanserver:
       Type: AWS::SQS::Queue
