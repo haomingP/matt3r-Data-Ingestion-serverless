@@ -127,22 +127,6 @@ resources:
       Type: AWS::SNS::Topic
       Properties:
         TopicName: "matt3r-dpl-sns"
-#        Subscription:
-#          - Endpoint:
-#              Fn::GetAtt:
-#                - "ParseCanserver"
-#                - "Arn"
-#            Protocol: "sqs"
-#          - Endpoint:
-#              Fn::GetAtt:
-#                - "InferAutopilotStates"
-#                - "Arn"
-#            Protocol: "sqs"
-#          - Endpoint:
-#              Fn::GetAtt:
-#                - "InferStationaryStates"
-#                - "Arn"
-#            Protocol: "sqs"
 
     Subscription1:
       Type: 'AWS::SNS::Subscription'
@@ -179,8 +163,8 @@ resources:
       Type: AWS::SQS::Queue
       Properties:
         DelaySeconds: 0
-        MaximumMessageSize: 1024
-        MessageRetentionPeriod: 60
+        MaximumMessageSize: 10240
+        MessageRetentionPeriod: 600
         QueueName: parse-canserver
         VisibilityTimeout: 360
 
@@ -188,8 +172,8 @@ resources:
       Type: AWS::SQS::Queue
       Properties:
         DelaySeconds: 0
-        MaximumMessageSize: 1024
-        MessageRetentionPeriod: 60
+        MaximumMessageSize: 10240
+        MessageRetentionPeriod: 600
         QueueName: infer-autopilot-states
         VisibilityTimeout: 360
 
@@ -197,8 +181,8 @@ resources:
       Type: AWS::SQS::Queue
       Properties:
         DelaySeconds: 0
-        MaximumMessageSize: 1024
-        MessageRetentionPeriod: 60
+        MaximumMessageSize: 10240
+        MessageRetentionPeriod: 600
         QueueName: infer-stationary-states
         VisibilityTimeout: 360
 
@@ -263,6 +247,18 @@ resources:
         Queues:
           - Ref: "InferStationaryStates"
 
+    EventNotificationBucket:
+        Type: AWS::S3::Bucket
+        Properties:
+          BucketName: haoming-raw-test
+          NotificationConfiguration:
+            TopicConfigurations:
+              - Event: s3:ObjectCreated:*
+                Topic:
+                  Ref: Matt3rDplSns
+
+
+
 #    SNSTopicS3Policy1:
 #      Type: AWS::SNS::TopicPolicy
 #      Properties:
@@ -281,24 +277,3 @@ resources:
 #                  "aws:SourceArn": "arn:aws:s3:::haoming-raw-test"
 #        Topics:
 #          - !Ref Matt3rDplSns
-
-#    SNSTopicS3Policy2:
-#      Type: AWS::S3::BucketPolicy
-#      Properties:
-#        Bucket: haoming-test-bucket
-#        PolicyDocument:
-#          Version: "2012-10-17"
-#          Statement:
-#            - Sid: "allow-s3-nitification"
-#              Effect: Allow
-#              Principal:
-#                Service: "sns.amazonaws.com"
-#              Resource: "arn:aws:s3:::haoming-test-bucket"
-#              Action:
-#                - "s3:*"
-#              Condition:
-#                ArnEquals:
-#                  "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
-
-#plugins:
-#  - serverless-sqs-alarms-plugin
