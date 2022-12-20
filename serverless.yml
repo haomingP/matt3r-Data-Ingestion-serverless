@@ -34,15 +34,18 @@ provider:
         Action:
           - "s3:PutObject"
           - "s3:GetObject"
-        Resource: "arn:aws:sqs:us-west-2::"
-      - Effect: Allow
+        Resource: "*"
+      - Effect: "Allow"
         Action:
           - "sns:*"
         Resource: "arn:aws:sqs:us-west-2::"
-      - Effect: Allow
+      - Effect: "Allow"
         Action:
           - sqs:DeleteMessage
           - sqs:ReceiveMessage
+          - sqs:SendMessage
+          - sqs:ListQueues
+          - sqs:GetQueueUrl
         Resource: "arn:aws:sqs:us-west-2::"
 
   s3:
