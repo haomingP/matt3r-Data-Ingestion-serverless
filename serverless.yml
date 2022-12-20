@@ -42,7 +42,8 @@ provider:
         Resource: "*"
       - Effect: Allow
         Action:
-          - "sqs:*"
+          - sqs:DeleteMessage
+          - sqs:ReceiveMessage
         Resource: "*"
 
   s3:
@@ -271,3 +272,6 @@ resources:
 #              Condition:
 #                ArnEquals:
 #                  "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
+
+plugins:
+  - serverless-sqs-alarms-plugin
