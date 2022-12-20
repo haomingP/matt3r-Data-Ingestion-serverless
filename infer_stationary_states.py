@@ -54,7 +54,7 @@ def lambda_handler(event, context):
         land_dir = str.join(object_key.split('/')[0:-1])
         land_bucket = s3_resource.Bucket(LANDING_BUCKET)
         exsit_file_list = []
-        for object_summary in land_bucket.objects.filter(Prefix=land_dir + '/IMU/'):
+        for object_summary in land_bucket.objects.filter(Prefix=land_dir + '/Stationary/'):
             exsit_file_list.append(object_summary.key)
         print(exsit_file_list)
 
@@ -108,7 +108,7 @@ def lambda_handler(event, context):
 
             if time_list:
                 # combine old files
-                path = land_dir + '/IMU/' + filename
+                path = land_dir + '/Stationary/' + filename
                 if path in exsit_file_list:
                     print("file need to be updated")
                     last_file = wr.s3.read_json(path='s3://' + LANDING_BUCKET + '/' + path)

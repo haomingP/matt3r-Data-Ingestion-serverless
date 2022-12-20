@@ -103,7 +103,7 @@ functions:
       - 'arn:aws:lambda:us-west-2:336392948345:layer:AWSSDKPandas-Python39:1'
 
   infer-stationary-states:
-    handler: infer-stationary-states.lambda_handler
+    handler: infer_stationary_states.lambda_handler
     timeout: 180
     memorySize: 256
     environment:
