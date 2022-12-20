@@ -100,7 +100,7 @@ def lambda_handler(event, context):
     object_key = urllib.parse.unquote_plus(b['Records'][0]['s3']['object']['key'], encoding='utf-8')
 
     source_bucket = RAW_BUCKET
-    event_bucket = b['Records'][0]['bucket']['name']
+    event_bucket = b['Records'][0]['s3']['bucket']['name']
     print(event_bucket)
     s3_opt = b['Records'][0]['eventName']
 
