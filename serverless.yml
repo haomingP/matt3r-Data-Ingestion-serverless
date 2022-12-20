@@ -247,15 +247,15 @@ resources:
         Queues:
           - Ref: "InferStationaryStates"
 
-    EventNotificationBucket:
-        Type: AWS::S3::Bucket
-        Properties:
-          BucketName: haoming-raw-test
-          NotificationConfiguration:
-            TopicConfigurations:
-              - Event: s3:ObjectCreated:*
-                Topic:
-                  Ref: Matt3rDplSns
+#    EventNotificationBucket:
+#        Type: AWS::S3::Bucket
+#        Properties:
+#          BucketName: haoming-raw-test
+#          NotificationConfiguration:
+#            TopicConfigurations:
+#              - Event: s3:ObjectCreated:*
+#                Topic:
+#                  Ref: Matt3rDplSns
 
 
 
