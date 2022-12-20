@@ -29,7 +29,6 @@ provider:
   region: us-west-2
 # you can define service wide environment variables here
 #  environment:
-  iamRoleStatementsName: haoming-lambda-parquet-test-role
   iamRoleStatements:
       - Effect: "Allow"
         Action:
@@ -273,5 +272,5 @@ resources:
 #                ArnEquals:
 #                  "aws:SourceArn": "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
 
-plugins:
-  - serverless-sqs-alarms-plugin
+#plugins:
+#  - serverless-sqs-alarms-plugin
