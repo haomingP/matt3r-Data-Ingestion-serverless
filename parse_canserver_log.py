@@ -97,9 +97,7 @@ def lambda_handler(event, context):
 
     body = event['Records'][0]['body']
     b = json.loads(body)
-    Message = b['Message']
-    mess = json.loads(Message)
-    object_key = urllib.parse.unquote_plus(mess['Records'][0]['s3']['object']['key'], encoding='utf-8')
+    object_key = urllib.parse.unquote_plus(b['Records'][0]['s3']['object']['key'], encoding='utf-8')
 
     source_bucket = RAW_BUCKET
     # object_key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'], encoding='utf-8')
