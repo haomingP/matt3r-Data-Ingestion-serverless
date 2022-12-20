@@ -256,24 +256,3 @@ resources:
 #              - Event: s3:ObjectCreated:*
 #                Topic:
 #                  Ref: Matt3rDplSns
-
-
-
-#    SNSTopicS3Policy1:
-#      Type: AWS::SNS::TopicPolicy
-#      Properties:
-#        PolicyDocument:
-#          Version: "2012-10-17"
-#          Statement:
-#            - Sid: "allow-s3-nitification2"
-#              Effect: Allow
-#              Principal:
-#                AWS: "*"
-#              Resource: "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
-#              Action:
-#                - "sns:Publish"
-#              Condition:
-#                ArnEquals:
-#                  "aws:SourceArn": "arn:aws:s3:::haoming-raw-test"
-#        Topics:
-#          - !Ref Matt3rDplSns
