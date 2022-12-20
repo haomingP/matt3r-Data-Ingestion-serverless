@@ -117,8 +117,11 @@ def lambda_handler(event, context):
                             data_dict["IMU-telematics"]["stationary-state"][0]["start"]:
                         last_file["IMU-telematics"]["stationary-state"] += data_dict["IMU-telematics"]["stationary-state"]
                         data_dict = last_file
-                    else:
+                    elif last_file["IMU-telematics"]["stationary-state"][0]["start"] <= \
+                            data_dict["IMU-telematics"]["stationary-state"][-1]["end"]:
                         data_dict["IMU-telematics"]["stationary-state"] += last_file["IMU-telematics"]["stationary-state"]
+                    else:
+                        pass
 
                 data_string = json.dumps(data_dict, indent=2)
                 try:

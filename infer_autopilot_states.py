@@ -53,7 +53,7 @@ def lambda_handler(event, context):
         land_dir = str.join(object_key.split('/')[0:-1])
         land_bucket = s3_resource.Bucket(LANDING_BUCKET)
         exsit_file_list = []
-        for object_summary in land_bucket.objects.filter(Prefix=land_dir + '/Autopilot'):
+        for object_summary in land_bucket.objects.filter(Prefix=land_dir + '/Autopilot/'):
             exsit_file_list.append(object_summary.key)
 
         # filter autopilot
@@ -89,7 +89,7 @@ def lambda_handler(event, context):
                 start_month = (start_time_str.split(' ')[0]).split('/')[1]
                 start_year = (start_time_str.split(' ')[0]).split('/')[2]
                 filename = 'canserver-events_' + start_year + '-' + start_month + '-' + start_date + '.json'
-                path = land_dir + '/Autopilot' + filename
+                path = land_dir + '/Autopilot/' + filename
                 if path in exsit_file_list:
                     last_file = wr.s3.read_json(path='s3://' + LANDING_BUCKET + '/' + path)
                     for k1 in last_file["auditory"].keys():
