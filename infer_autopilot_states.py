@@ -103,7 +103,7 @@ def lambda_handler(event, context):
                     s3.put_object(
                         Body=data_string,
                         Bucket=LANDING_BUCKET,
-                        Key=land_dir + '/' + filename
+                        Key=land_dir + '/Autopilot/' + filename
                     )
                 except Exception as e:
                     print(e)
