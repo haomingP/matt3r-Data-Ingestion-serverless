@@ -149,6 +149,7 @@ def lambda_handler(event, context):
                     part_df = pd.concat([last_file, part_df])
                 elif last_file.iloc[0, 1] < part_df.iloc[-1, 1]:
                     part_df = pd.concat([part_df, last_file])
+                print("Updated successfully!")
             else:
                 print("new file!")
             landing_path = 's3://' + LANDING_BUCKET + '/' + land_dir + '/' + fn_list[i] + '-00-00' + '.parquet'
