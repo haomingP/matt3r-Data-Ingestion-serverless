@@ -48,8 +48,7 @@ provider:
       - Effect: Allow
         Action:
           - "sns:*"
-        Resource:
-          - "arn:aws:sns:us-west-2:963414178352:Matt3rDplSns"
+        Resource: "*"
       - Effect: Allow
         Action:
           - "sqs:*"
