@@ -100,11 +100,12 @@ def lambda_handler(event, context):
     object_key = urllib.parse.unquote_plus(b['Records'][0]['s3']['object']['key'], encoding='utf-8')
 
     source_bucket = RAW_BUCKET
-    # object_key = urllib.parse.unquote_plus(event['Records'][0]['s3']['object']['key'], encoding='utf-8')
-    s3_opt = mess['Records'][0]['eventName']
+    event_bucket = b['Records'][0]['bucket']['name']
+    print(event_bucket)
+    s3_opt = b['Records'][0]['eventName']
 
     # Only uploead will trigger function
-    if 'ObjectCreated' in s3_opt:
+    if 'ObjectCreated' in s3_opt and source_bucket == event_bucket:
         # access file
         get_file = s3_object.get_object(Bucket=source_bucket,
                                         Key=object_key)
