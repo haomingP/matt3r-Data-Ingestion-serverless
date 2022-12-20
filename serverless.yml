@@ -67,7 +67,7 @@ provider:
 
 functions:
   parse-canserver-log:
-    handler: parse_canserver_log.lambda_handler
+    handler: parse_canserver_filtered_log.lambda_handler
     timeout: 180
     memorySize: 512
     environment:
