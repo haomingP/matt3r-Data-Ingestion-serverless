@@ -105,7 +105,7 @@ def lambda_handler(event, context):
                 }
             }
             data_dict["IMU-telematics"]["stationary-state"] = time_list
-
+            print(time_list)
             if time_list:
                 # combine old files
                 path = land_dir + '/Stationary/' + filename
