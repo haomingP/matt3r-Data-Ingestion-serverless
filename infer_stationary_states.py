@@ -35,7 +35,7 @@ def timestamp2string(timeStamp):
 
 def lambda_handler(event, context):
     print("=====================================================")
-
+    print(event)
     # get log file from raw bucket
     body = event['Records'][0]['body']
     b = json.loads(body)
