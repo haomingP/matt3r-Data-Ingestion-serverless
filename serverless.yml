@@ -136,7 +136,7 @@ resources:
               Action:
                 - sts:AssumeRole
         ManagedPolicyArns:
-          - arn:aws:iam::aws:policy/service-role/AmazonSNSFullAccess
+          - arn:aws:iam::aws:policy/AmazonSNSFullAccess
           - arn:aws:iam::aws:policy/AmazonSQSFullAccess
 
     Matt3rDplSns:
