@@ -211,7 +211,7 @@ resources:
             - Sid: "allow-sns-messages1"
               Effect: "Allow"
               Principal:
-                Service: "sns.amazonaws.com"
+                AWS: !GetAtt MyIAMRole.Arn
               Resource: !GetAtt
                 - "ParseCanserver"
                 - "Arn"
@@ -233,7 +233,7 @@ resources:
             - Sid: "allow-sns-messages2"
               Effect: "Allow"
               Principal:
-                Service: "sns.amazonaws.com"
+                AWS: !GetAtt MyIAMRole.Arn
               Resource: !GetAtt
                 - "InferAutopilotStates"
                 - "Arn"
@@ -254,7 +254,7 @@ resources:
             - Sid: "allow-sns-messages3"
               Effect: "Allow"
               Principal:
-                Service: "sns.amazonaws.com"
+                AWS: !GetAtt MyIAMRole.Arn
               Resource: !GetAtt
                 - "InferStationaryStates"
                 - "Arn"
