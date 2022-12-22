@@ -65,9 +65,6 @@ provider:
 
 package:
   individually: true
-  exclude:
-    - node_modules/**
-    - venv/**
 
 functions:
   parse-canserver-log:
