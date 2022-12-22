@@ -62,6 +62,12 @@ provider:
       versioningConfiguration:
         Status: Enabled
 
+
+package:
+  exclude:
+    - node_modules/**
+    - venv/**
+
 functions:
   parse-canserver-log:
     handler: parse_canserver_filtered_log.lambda_handler
