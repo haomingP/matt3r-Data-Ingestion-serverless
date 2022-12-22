@@ -62,9 +62,6 @@ provider:
       versioningConfiguration:
         Status: Enabled
 
-# you can add packaging information here
-#package:
-
 functions:
   parse-canserver-log:
     handler: parse_canserver_filtered_log.lambda_handler
