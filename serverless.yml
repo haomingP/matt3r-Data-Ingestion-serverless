@@ -211,7 +211,7 @@ resources:
             - Sid: "allow-sns-messages1"
               Effect: "Allow"
               Principal:
-                AWS: "arn:aws:iam::963414178352:root"
+                AWS: "963414178352"
               Resource: !GetAtt
                 - "ParseCanserver"
                 - "Arn"
@@ -233,7 +233,7 @@ resources:
             - Sid: "allow-sns-messages2"
               Effect: "Allow"
               Principal:
-                AWS: "arn:aws:iam::963414178352:root"
+                AWS: "963414178352"
               Resource: !GetAtt
                 - "InferAutopilotStates"
                 - "Arn"
@@ -254,7 +254,7 @@ resources:
             - Sid: "allow-sns-messages3"
               Effect: "Allow"
               Principal:
-                AWS: "arn:aws:iam::963414178352:root"
+                AWS: "963414178352"
               Resource: !GetAtt
                 - "InferStationaryStates"
                 - "Arn"
