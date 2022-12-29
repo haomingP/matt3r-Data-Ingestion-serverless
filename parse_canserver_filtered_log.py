@@ -18,7 +18,6 @@ LANDING_BUCKET = os.environ.get('LANDING_BUCKET')
 RAW_BUCKET = os.environ.get('RAW_BUCKET')
 TZ = os.environ.get('TZ')
 
-
 # get the start and end time of this log file
 def get_start_end_time(df):
     start_time_str = df.iloc[0, 0]
@@ -108,7 +107,7 @@ def bin_to_dec(str1):
 def lambda_handler(event, context):
     DATA_DICT = {921: 'autopilot', 273: 'accelerometer', 257: 'angular_velocity', 79: 'gps', 599: 'speed'}
     AP_STATE_DICT = {0: 'DISABLED', 1: 'UNAVAILABLE', 2: 'AVAILABLE', 3: 'ACTIVE_NOMINAL', 4: 'ACTIVE_RESTRICTED',
-                     5: 'ACTIVE_NAV', 8: 'ABORTING', 9: 'ABORTED'}
+                     5: 'ACTIVE_NAV', 8: 'ABORTING', 9: 'ABORTED', 14:'FAULT', 15:'SNA'}
     ACC_SCALE = 0.00125
     YAW_SCALE = 0.0001
     PITCH_ROLL_SCALE = 0.00025
