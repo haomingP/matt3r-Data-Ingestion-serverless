@@ -121,12 +121,14 @@ def lambda_handler(event, context):
     bucket = RAW_BUCKET
     body = event['Records'][0]['body']
     b = json.loads(body)
-    key = urllib.parse.unquote_plus(b['Records'][0]['s3']['object']['key'], encoding='utf-8')
+    object_key = urllib.parse.unquote_plus(b['Records'][0]['s3']['object']['key'], encoding='utf-8')
     # key = event['Records'][0]['s3']['object']['key']
 
     # Use the boto3 client for S3 to download the file
     s3 = boto3.client('s3')
     s3_resource = boto3.resource('s3')
+
+    key = object_key.split('/')[-1]
     response = s3.get_object(Bucket=bucket, Key=key)
 
     # Get the file's content as a bytearray
