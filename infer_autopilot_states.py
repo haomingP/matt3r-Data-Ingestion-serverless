@@ -76,7 +76,7 @@ def lambda_handler(event, context):
         if len(autopilot) != 0:
             autopilot_df = pd.DataFrame()
             for i in range(1, df_filtered.shape[0]):
-                if df_filtered.iloc[i, 1] == 3.0 and df_filtered.iloc[i - 1, 1] == 2.0:
+                if df_filtered.iloc[i, 1] == 3.0 and df_filtered.iloc[i - 1, 1] <= 2.0:
                     new_df = pd.DataFrame(df_filtered.iloc[i]).T
                     new_df['Status'] = 'engagement'
                     autopilot_df = pd.concat([autopilot_df, new_df])
@@ -98,7 +98,7 @@ def lambda_handler(event, context):
             # check if have engage / disengage in this day
             if not autopilot_df.empty:
                 # check if need to combine
-                start_time_str = timestamp2string(df_filtered.iloc[0, 1])
+                start_time_str = timestamp2string(df_filtered.iloc[0, 0])
                 print(start_time_str)
                 start_date = (start_time_str.split(' ')[0]).split('/')[0]
                 start_month = (start_time_str.split(' ')[0]).split('/')[1]

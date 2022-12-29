@@ -73,7 +73,7 @@ def lambda_handler(event, context):
         if len(veh_speed) != 0:
             # Set up filename format
             start_time_str = timestamp2string(veh_speed[0]['timestamp'])
-            start_date = (start_time_str.split(' ')[0]).split('-')[2]
+            start_date = (start_time_str.split(' ')[0]).split('/')[2]
             start_month = (start_time_str.split(' ')[0]).split('/')[1]
             start_year = (start_time_str.split(' ')[0]).split('/')[0]
             filename = 'canserver-events_' + start_year + '-' + start_month + '-' + start_date + '.json'
