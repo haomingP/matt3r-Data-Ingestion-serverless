@@ -69,7 +69,7 @@ package:
 functions:
   parse-canserver-log:
     handler: parse_canserver_filtered_log.lambda_handler
-    timeout: 180
+    timeout: 600
     memorySize: 512
     environment:
       LANDING_BUCKET: haoming-test-bucket

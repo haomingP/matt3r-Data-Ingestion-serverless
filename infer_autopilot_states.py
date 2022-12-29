@@ -16,6 +16,9 @@ LANDING_BUCKET = os.environ.get('LANDING_BUCKET')
 RAW_BUCKET = os.environ.get('RAW_BUCKET')
 TZ = os.environ.get('TZ')
 
+AP_STATE_DICT = {'DISABLED': 0, 'UNAVAILABLE': 1, 'AVAILABLE': 2, 'ACTIVE_NOMINAL': 3, 'ACTIVE_RESTRICTED': 4,
+                     'ACTIVE_NAV': 5, 'ABORTING': 8, 'ABORTED': 9}
+
 # S3 Object
 s3 = boto3.client('s3')
 s3_object = boto3.client('s3', region_name='us-west-2')
@@ -46,27 +49,34 @@ def lambda_handler(event, context):
     s3_opt = b['Records'][0]['eventName']
     if 'ObjectCreated' in s3_opt and RAW_BUCKET == event_bucket:
         # access parquet file
-        s3_path = "s3://" + RAW_BUCKET + '/' + object_key
-        df_parquet = wr.s3.read_parquet(path=s3_path)
 
-        str = ''
-        land_dir = str.join(object_key.split('/')[0:-1])
+        content_object = s3_resource.Object(RAW_BUCKET, object_key)
+        file_content = content_object.get()['Body'].read().decode('utf-8')
+        json_content = json.loads(file_content)
+        # s3_path = "s3://" + RAW_BUCKET + '/' + object_key
+        # df_parquet = wr.s3.read_parquet(path=s3_path)
+
+        str1 = ''
+        land_dir = str1.join(object_key.split('/')[0:-1])
         land_bucket = s3_resource.Bucket(LANDING_BUCKET)
         exsit_file_list = []
         for object_summary in land_bucket.objects.filter(Prefix=land_dir + '/Autopilot/'):
             exsit_file_list.append(object_summary.key)
 
         # filter autopilot
-        df_filtered = df_parquet[df_parquet['field'] == 'AutopilotState']
+        autopilot = json_content['ap_status']
+        df_filtered = pd.DataFrame(autopilot)
+        df_filtered.value = df_filtered.apply(lambda x: AP_STATE_DICT[x['value']], axis=1)
+        print(df_filtered.columns)
 
-        if not df_filtered.empty:
+        if not autopilot.empty:
             autopilot_df = pd.DataFrame()
             for i in range(1, df_filtered.shape[0]):
-                if df_filtered.iloc[i, 3] == 3.0 and df_filtered.iloc[i - 1, 3] == 2.0:
+                if df_filtered.iloc[i, 1] == 3.0 and df_filtered.iloc[i - 1, 1] == 2.0:
                     new_df = pd.DataFrame(df_filtered.iloc[i]).T
                     new_df['Status'] = 'engagement'
                     autopilot_df = pd.concat([autopilot_df, new_df])
-                elif df_filtered.iloc[i, 3] <= 2.0 and df_filtered.iloc[i - 1, 3] == 3.0:
+                elif df_filtered.iloc[i, 1] <= 2.0 and df_filtered.iloc[i - 1, 1] == 3.0:
                     new_df = pd.DataFrame(df_filtered.iloc[i]).T
                     new_df['Status'] = 'disengagement'
                     autopilot_df = pd.concat([autopilot_df, new_df])

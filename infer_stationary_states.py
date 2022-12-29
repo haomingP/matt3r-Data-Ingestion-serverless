@@ -42,16 +42,18 @@ def lambda_handler(event, context):
     object_key = urllib.parse.unquote_plus(b['Records'][0]['s3']['object']['key'], encoding='utf-8')
 
     event_bucket = b['Records'][0]['s3']['bucket']['name']
-    print(event_bucket)
     s3_opt = b['Records'][0]['eventName']
     if 'ObjectCreated' in s3_opt and RAW_BUCKET == event_bucket:
         # access parquet file
-        s3_path = "s3://" + RAW_BUCKET + '/' + object_key
-        df_parquet = wr.s3.read_parquet(path=s3_path)
+        # s3_path = "s3://" + RAW_BUCKET + '/' + object_key
+        # df_parquet = wr.s3.read_parquet(path=s3_path)
+        content_object = s3_resource.Object(RAW_BUCKET, object_key)
+        file_content = content_object.get()['Body'].read().decode('utf-8')
+        json_content = json.loads(file_content)
 
         # get existed files in landing bucket
-        str = ''
-        land_dir = str.join(object_key.split('/')[0:-1])
+        str1 = ''
+        land_dir = str1.join(object_key.split('/')[0:-1])
         land_bucket = s3_resource.Bucket(LANDING_BUCKET)
         exsit_file_list = []
         for object_summary in land_bucket.objects.filter(Prefix=land_dir + '/Stationary/'):
@@ -59,28 +61,27 @@ def lambda_handler(event, context):
         print(exsit_file_list)
 
         # filter VehSpeed
-        df_filter = df_parquet[df_parquet['field'] == 'VehSpeed']
-        df_filter = df_filter.reset_index(drop=True)
-        df_filter = df_filter.drop(['index'], axis=1)
+        veh_speed = json_content['speed']
+        speed_list = [e['value'] for e in veh_speed]
 
-        if not df_filter.empty:
+        if not veh_speed.empty:
             # Set up filename format
-            start_time_str = timestamp2string(df_filter['timestamp'][0])
-            start_date = (start_time_str.split(' ')[0]).split('/')[0]
+            start_time_str = timestamp2string(veh_speed[0]['timestamp'])
+            start_date = (start_time_str.split(' ')[0]).split('-')[2]
             start_month = (start_time_str.split(' ')[0]).split('/')[1]
-            start_year = (start_time_str.split(' ')[0]).split('/')[2]
+            start_year = (start_time_str.split(' ')[0]).split('/')[0]
             filename = 'canserver-events_' + start_year + '-' + start_month + '-' + start_date + '.json'
 
-            start_index = df_filter['value'].isin([0]).idxmax()
-            end_index = df_filter.shape[0] - 1
-            start_time = df_filter['timestamp'][start_index]
+            start_index = speed_list.index(0)
+            end_index = len(speed_list) - 1
+            start_time = veh_speed[start_index]['timestamp']
             end_time = 0.0
             time_list = []
             for i in range(start_index + 1, end_index):
-                cur_time = df_filter['timestamp'][i]
-                cur_speed = df_filter['value'][i]
-                pre_speed = df_filter['value'][i - 1]
-                next_speed = df_filter['value'][i + 1]
+                cur_time = veh_speed[i]['timestamp']
+                cur_speed = speed_list[i]
+                pre_speed = speed_list[i - 1]
+                next_speed = speed_list[i + 1]
 
                 if cur_speed == 0 and pre_speed != 0:
                     start_time = cur_time
