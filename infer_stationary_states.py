@@ -51,8 +51,8 @@ def lambda_handler(event, context):
         # access parquet file
         # s3_path = "s3://" + RAW_BUCKET + '/' + object_key
         # df_parquet = wr.s3.read_parquet(path=s3_path)
-        key = object_key.split('/')[-1]
-        content_object = s3_resource.Object(RAW_BUCKET, key)
+        # key = object_key.split('/')[-1]
+        content_object = s3_resource.Object(RAW_BUCKET, object_key)
         file_content = content_object.get()['Body'].read().decode('utf-8')
         json_content = json.loads(file_content)
 
