@@ -68,7 +68,7 @@ def lambda_handler(event, context):
         veh_speed = json_content['speed']
         speed_list = [e['value'] for e in veh_speed]
 
-        if not veh_speed.empty:
+        if len(veh_speed) != 0:
             # Set up filename format
             start_time_str = timestamp2string(veh_speed[0]['timestamp'])
             start_date = (start_time_str.split(' ')[0]).split('-')[2]

@@ -72,7 +72,7 @@ def lambda_handler(event, context):
         df_filtered.value = df_filtered.apply(lambda x: AP_STATE_DICT[x['value']], axis=1)
         print(df_filtered.columns)
 
-        if not autopilot.empty:
+        if len(autopilot) != 0:
             autopilot_df = pd.DataFrame()
             for i in range(1, df_filtered.shape[0]):
                 if df_filtered.iloc[i, 1] == 3.0 and df_filtered.iloc[i - 1, 1] == 2.0:
