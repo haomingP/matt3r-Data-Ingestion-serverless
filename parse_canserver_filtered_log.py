@@ -14,8 +14,9 @@ import json
 
 # from bitstring import Bits
 
-RAW_BUCKET = "haoming-raw-test"
-LANDING_BUCKET = "haoming-test-bucket"
+LANDING_BUCKET = os.environ.get('LANDING_BUCKET')
+RAW_BUCKET = os.environ.get('RAW_BUCKET')
+TZ = os.environ.get('TZ')
 
 
 # get the start and end time of this log file
