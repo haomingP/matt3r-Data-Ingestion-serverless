@@ -129,7 +129,8 @@ def lambda_handler(event, context):
     s3_resource = boto3.resource('s3')
 
     key = object_key.split('/')[-1]
-    response = s3.get_object(Bucket=bucket, Key=key)
+    print(key)
+    response = s3.get_object(Bucket=bucket, Key=object_key)
 
     # Get the file's content as a bytearray
     file = response['Body']
