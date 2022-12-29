@@ -344,7 +344,7 @@ def lambda_handler(event, context):
             else:
                 print("new file!")
 
-            landing_path = land_dir + '/' + fn_list[i] + '-00-00' + '.json'
+            landing_path = land_dir + '/' + land_dir + '/' + fn_list[i] + '-00-00' + '.json'
             print(landing_path)
             data_string = json.dumps(clean_dict, indent=2)
             try:
