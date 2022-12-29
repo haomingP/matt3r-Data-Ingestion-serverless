@@ -59,6 +59,7 @@ def lambda_handler(event, context):
         # get existed files in landing bucket
         str1 = ''
         land_dir = str1.join(object_key.split('/')[0:-1])
+        print("land_dir:", land_dir)
         land_bucket = s3_resource.Bucket(LANDING_BUCKET)
         exsit_file_list = []
         for object_summary in land_bucket.objects.filter(Prefix=land_dir + '/Stationary/'):

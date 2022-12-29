@@ -61,6 +61,7 @@ def lambda_handler(event, context):
 
         str1 = ''
         land_dir = str1.join(object_key.split('/')[0:-1])
+        print("land_dir:", land_dir)
         land_bucket = s3_resource.Bucket(LANDING_BUCKET)
         exsit_file_list = []
         for object_summary in land_bucket.objects.filter(Prefix=land_dir + '/Autopilot/'):
@@ -98,6 +99,7 @@ def lambda_handler(event, context):
             if not autopilot_df.empty:
                 # check if need to combine
                 start_time_str = timestamp2string(df_filtered.iloc[0, 1])
+                print(start_time_str)
                 start_date = (start_time_str.split(' ')[0]).split('/')[0]
                 start_month = (start_time_str.split(' ')[0]).split('/')[1]
                 start_year = (start_time_str.split(' ')[0]).split('/')[2]
