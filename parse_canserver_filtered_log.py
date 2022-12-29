@@ -300,7 +300,7 @@ def lambda_handler(event, context):
 
         # Get the landing bucket path
         str2 = ''
-        land_dir = str2.join(key.split('/')[0:-1])
+        land_dir = str2.join(object_key.split('/')[0:-1])
         landing_bucket = s3_resource.Bucket(LANDING_BUCKET)
         exsit_file_list = []
         for object_summary in landing_bucket.objects.filter(Prefix=land_dir):
